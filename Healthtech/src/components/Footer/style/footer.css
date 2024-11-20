@@ -1,0 +1,75 @@
+/* Footer Section */
+.footer-section {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .footer-logo img {
+    max-height: 50px;
+  }
+  
+  .footer-title {
+    font-weight: bold;
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 1rem;
+  }
+  
+  ul {
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  ul li a {
+    color: #ffffffd9; /* Light white */
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+  
+  ul li a:hover {
+    color: white;
+  }
+  
+  /* Social Icons */
+  .social-icons a {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    transform: scale(1.1);
+  }
+  
+  .social-icon.instagram {
+    background-image: url('instagram-icon.png'); /* Replace with your Instagram icon */
+    background-size: cover;
+  }
+  
+  .social-icon.twitter {
+    background-image: url('twitter-icon.png'); /* Replace with your Twitter icon */
+    background-size: cover;
+  }
+  
+  .social-icon.facebook {
+    background-image: url('facebook-icon.png'); /* Replace with your Facebook icon */
+    background-size: cover;
+  }
+  
+  .social-icon.youtube {
+    background-image: url('youtube-icon.png'); /* Replace with your YouTube icon */
+    background-size: cover;
+  }
+  
+  .social-icon.linkedin {
+    background-image: url('linkedin-icon.png'); /* Replace with your LinkedIn icon */
+    background-size: cover;
+  }
+  
