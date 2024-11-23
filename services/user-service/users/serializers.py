@@ -4,55 +4,74 @@ from .models import Usuario, Paciente, Medico
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = '__all__'
-        exclude = ['contraseña']
+        fields = ['email', 'password', 'first_name', 'last_name', 'telefono']
+        extra_kwargs = {
+            'password': {'write_only': True},  # La contraseña no se incluye en las respuestas
+        }
+
+    def create(self, validated_data):
+        '''
+        Crea un usuario usando el manager y hashea su contraseña.
+        '''
+        return Usuario.objects.create_user(**validated_data)
+
+    def update(self, instance, validated_data):
+        '''
+        Actualiza un usuario, incluyendo el cambio de contraseña si se proporciona.
+        '''
+        password = validated_data.pop('password', None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
 
 class PacienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paciente
         fields = ['id_usuario', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'numero_seguridad_social', 'historial_medico']
 
-    def validate(self, attrs):
-        if 'id_usuario' not in attrs:
-            raise serializers.ValidationError('id_usuario is required')
-        if 'documento' not in attrs:
-            raise serializers.ValidationError('documento is required')
-        if 'direccion' not in attrs:
-            raise serializers.ValidationError('direccion is required')
-        if 'fecha_nacimiento' not in attrs:
-            raise serializers.ValidationError('fecha_nacimiento is required')
-        if 'genero' not in attrs:
-            raise serializers.ValidationError('genero is required')
-        if 'numero_seguridad_social' not in attrs:
-            raise serializers.ValidationError('numero_seguridad_social is required')
-        return super().validate(attrs)
-    
+    def validate_id_usuario(self, value):
+        '''
+        Verifica que el usuario asociado exista.
+        '''
+        if not isinstance(value, Usuario):
+            # Si `value` no es un objeto `Usuario`, busca el usuario por su ID
+            value = Usuario.objects.filter(id=value).first()
+
+        if not value:
+            raise serializers.ValidationError('El usuario especificado no existe.')
+        return value
+
     def create(self, validated_data):
-        id_usuario = validated_data.pop('id_usuario')
-        usuario = Usuario.objects.get(id_usuario=id_usuario)
-        return Paciente.objects.create(id_usuario=usuario, **validated_data)
-    
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
-    
+        '''
+        Crea un paciente asociándolo a un usuario existente.
+        '''
+        return Paciente.objects.create(**validated_data)
+
+
 class MedicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medico
-        fields = '__all__'
+        fields = ['id_usuario', 'especialidad', 'nro_matricula']
 
-    def validate(self, attrs):
-        if 'id_usuario' not in attrs:
-            raise serializers.ValidationError('id_usuario is required')
-        if 'especialidad' not in attrs:
-            raise serializers.ValidationError('especialidad is required')
-        if 'nro_matricula' not in attrs:
-            raise serializers.ValidationError('nro_matricula is required')
-        return super().validate(attrs)
-    
+    def validate_id_usuario(self, value):
+        '''
+        Verifica que el usuario asociado exista.
+        '''
+        if not isinstance(value, Usuario):
+            # Si `value` no es un objeto `Usuario`, busca el usuario por su ID
+            value = Usuario.objects.filter(id=value).first()
+
+        if not value:
+            raise serializers.ValidationError('El usuario especificado no existe.')
+        return value
+
     def create(self, validated_data):
-        id_usuario = validated_data.pop('id_usuario')
-        usuario = Usuario.objects.get(id_usuario=id_usuario)
-        return Paciente.objects.create(id_usuario=usuario, **validated_data)
-    
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
+        '''
+        Crea un médico asociándolo a un usuario existente.
+        '''
+        # En el `validated_data` debería estar el ID del usuario, y lo estamos asociando correctamente.
+        return Medico.objects.create(**validated_data)
