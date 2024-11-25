@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from especialidad.models import Especialidad
 from .models import Usuario, Paciente, Medico
+
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,52 +28,72 @@ class UsuarioSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-
+    
 
 class PacienteSerializer(serializers.ModelSerializer):
+    usuario = UsuarioSerializer()
+
     class Meta:
         model = Paciente
-        fields = ['id_usuario', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'numero_seguridad_social', 'historial_medico']
+        fields = ['usuario', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'historial_medico']
 
-    def validate_id_usuario(self, value):
-        '''
-        Verifica que el usuario asociado exista.
-        '''
-        if not isinstance(value, Usuario):
-            # Si `value` no es un objeto `Usuario`, busca el usuario por su ID
-            value = Usuario.objects.filter(id=value).first()
-
-        if not value:
-            raise serializers.ValidationError('El usuario especificado no existe.')
-        return value
+    def validate(self, attrs):
+        if not attrs.get('documento'):
+            raise serializers.ValidationError('El documento es requerido.')
+        if not attrs.get('direccion'):
+            raise serializers.ValidationError('La dirección es requerida.')
+        if not attrs.get('fecha_nacimiento'):
+            raise serializers.ValidationError('La fecha de nacimiento es requerida.')
+        if not attrs.get('genero'):
+            raise serializers.ValidationError('El género es requerido.')
+        return attrs  # Devuelve los datos validados
 
     def create(self, validated_data):
-        '''
-        Crea un paciente asociándolo a un usuario existente.
-        '''
-        return Paciente.objects.create(**validated_data)
+        # Extraer datos de usuario
+        usuario_data = validated_data.pop('usuario')
 
+        # Validar y crear usuario
+        usuario_serializer = UsuarioSerializer(data=usuario_data)
+        if not usuario_serializer.is_valid():
+            raise serializers.ValidationError(usuario_serializer.errors)
+
+        usuario = usuario_serializer.save()
+
+        # Crear paciente
+        paciente = Paciente.objects.create(id_usuario=usuario, **validated_data)
+        return paciente
+    
+from rest_framework import serializers
+from .models import Medico, Usuario, Especialidad
 
 class MedicoSerializer(serializers.ModelSerializer):
+    usuario = UsuarioSerializer()
+
     class Meta:
         model = Medico
-        fields = ['id_usuario', 'especialidad', 'nro_matricula']
+        fields = ['usuario', 'especialidad', 'nro_matricula']
 
-    def validate_id_usuario(self, value):
-        '''
-        Verifica que el usuario asociado exista.
-        '''
-        if not isinstance(value, Usuario):
-            # Si `value` no es un objeto `Usuario`, busca el usuario por su ID
-            value = Usuario.objects.filter(id=value).first()
-
-        if not value:
-            raise serializers.ValidationError('El usuario especificado no existe.')
-        return value
+    def validate(self, attrs):
+        # Validar que la especialidad exista
+        especialidad = attrs.get('especialidad')
+        if not Especialidad.objects.filter(id_especialidad=especialidad.id_especialidad).exists():
+            raise serializers.ValidationError({'especialidad': 'La especialidad no existe.'})
+        
+        # Validar que el número de matrícula esté presente
+        if not attrs.get('nro_matricula'):
+            raise serializers.ValidationError({'nro_matricula': 'El número de matrícula es requerido.'})
+        
+        return attrs
 
     def create(self, validated_data):
-        '''
-        Crea un médico asociándolo a un usuario existente.
-        '''
-        # En el `validated_data` debería estar el ID del usuario, y lo estamos asociando correctamente.
-        return Medico.objects.create(**validated_data)
+        # Extraer y validar datos de usuario
+        usuario_data = validated_data.pop('usuario')
+        usuario_serializer = UsuarioSerializer(data=usuario_data)
+        if not usuario_serializer.is_valid():
+            raise serializers.ValidationError({'usuario': usuario_serializer.errors})
+
+        usuario = usuario_serializer.save()
+
+        # Crear el objeto médico
+        medico = Medico.objects.create(id_usuario=usuario, **validated_data)
+        return medico
