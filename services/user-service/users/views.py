@@ -1,4 +1,4 @@
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -29,6 +29,19 @@ class UsuariosViews(APIView):
 
 
 class PacienteViews(APIView):
+    def get(self, request, id=0):
+        if id > 0:
+            try:
+                paciente = Paciente.objects.get(pk=id)
+                data = PacienteSerializer(paciente).data
+                return Response(data, status=status.HTTP_200_OK)
+            except Paciente.DoesNotExist:
+                return Response({'error': 'Paciente no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        pacientes = Paciente.objects.all()
+        data = PacienteSerializer(pacientes, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+    
     @transaction.atomic
     def post(self, request):
         data = request.data
@@ -50,23 +63,45 @@ class PacienteViews(APIView):
             'historial_medico': data.get('historial_medico'),
         }
 
-        # Crear Usuario
-        usuario_serializer = UsuarioSerializer(data=usuario_data)
-        if not usuario_serializer.is_valid():
-            return Response(usuario_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        usuario = usuario_serializer.save()
+        try:
+            # Crear Usuario
+            usuario_serializer = UsuarioSerializer(data=usuario_data)
+            if not usuario_serializer.is_valid():
+                return Response(usuario_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Crear Paciente
-        paciente_data['id_usuario'] = usuario.id
-        paciente_serializer = PacienteSerializer(data=paciente_data)
-        if not paciente_serializer.is_valid():
-            return Response(paciente_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        paciente_serializer.save()
+            # Guardar Usuario en la base de datos
+            usuario = usuario_serializer.save()
+
+            # Crear Paciente
+            paciente_data['id_usuario'] = usuario.id
+            paciente_serializer = PacienteSerializer(data=paciente_data)
+            if not paciente_serializer.is_valid():
+                return Response(paciente_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+            # Guardar Paciente en la base de datos
+            paciente_serializer.save()
+
+        except IntegrityError:
+            # Si algo falla (por ejemplo, violación de integridad de la base de datos), revertir la transacción
+            return Response({'error': 'Hubo un error al crear el usuario o el paciente'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'message': 'Paciente creado exitosamente'}, status=status.HTTP_201_CREATED)
 
 
 class MedicoViews(APIView):
+    def get(self, request, id=0):
+        if id > 0:
+            try:
+                medico = Medico.objects.get(pk=id)
+                data = MedicoSerializer(medico).data
+                return Response(data, status=status.HTTP_200_OK)
+            except Medico.DoesNotExist:
+                return Response({'error': 'Médico no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        medicos = Medico.objects.all()
+        data = MedicoSerializer(medicos, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+    
     @transaction.atomic
     def post(self, request):
         data = request.data
@@ -111,3 +146,17 @@ class MedicoViews(APIView):
         medicos = Medico.objects.all()
         data = MedicoSerializer(medicos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+
+class VerifyUserViews(APIView):
+    def post(self, request):
+        data = request.data
+        email = data.get('email')
+        password = data.get('password')
+
+        try:
+            usuario = Usuario.objects.get(email=email)
+            if usuario.check_password(password):
+                return Response({'message': 'Usuario autenticado'}, status=status.HTTP_200_OK)
+            return Response({'error': 'Contraseña incorrecta'}, status=status.HTTP_400_BAD_REQUEST)
+        except Usuario.DoesNotExist:
+            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)

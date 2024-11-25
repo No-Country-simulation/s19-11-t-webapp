@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: adminroot
+      MYSQL_DATABASE: healthtech_usuario
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminroot
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  web:
+    build: .
+    container_name: user-services
+    command: ["sh", "-c", "until nc -z -v -w30 db 3306; do echo 'Waiting for MySQL...'; sleep 5; done; python manage.py runserver 0.0.0.0:8000"]
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DJANGO_SETTINGS_MODULE=user_service.settings
+      - DATABASE_URL=mysql://admin:adminroot@db:3306/healthtech_usuario
+    networks:
+      - mynetwork
+
+volumes:
+  mysql_data:
+
+networks:
+  mynetwork:
