@@ -10,6 +10,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},  # La contraseña no se incluye en las respuestas
         }
+        partial = True
 
     def create(self, validated_data):
         '''
@@ -36,6 +37,7 @@ class PacienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paciente
         fields = ['usuario', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'historial_medico']
+        partial = True
 
     def validate(self, attrs):
         if not attrs.get('documento'):
@@ -63,8 +65,6 @@ class PacienteSerializer(serializers.ModelSerializer):
         paciente = Paciente.objects.create(id_usuario=usuario, **validated_data)
         return paciente
     
-from rest_framework import serializers
-from .models import Medico, Usuario, Especialidad
 
 class MedicoSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
@@ -72,6 +72,7 @@ class MedicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medico
         fields = ['usuario', 'especialidad', 'nro_matricula']
+        partial = True
 
     def validate(self, attrs):
         # Validar que la especialidad exista
