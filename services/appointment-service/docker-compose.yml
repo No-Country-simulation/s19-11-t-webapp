@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  appointmentservice:
+    build: .
+    volumes:
+      - .:/usr/src/app # Sincroniza tu código local con el contenedor
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: ["nodemon", "src/app.js"] # Usa nodemon para ejecutar la app
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: macarena
+      MYSQL_DATABASE: citas
+    ports:
+      - "3306:3306"
