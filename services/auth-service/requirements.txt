@@ -6,3 +6,4 @@ python-dotenv
 redis
 requests
 flask-sqlalchemy
+loguru

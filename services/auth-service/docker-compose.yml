@@ -21,7 +21,6 @@ services:
       - REDIS_PASSWORD=
       - JWT_SECRET_KEY=supersecretkey
       - USER_SERVICE_URL=http://localhost:8000
-      - PYTHONPATH=/app
     networks:
       - security-net
     depends_on:

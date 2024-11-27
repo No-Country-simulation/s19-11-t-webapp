@@ -1,16 +1,11 @@
 import os
 from dotenv import load_dotenv
 import redis
-from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 
-#db = SQLAlchemy()
-
 
 class Config:
-    #SQLALCHEMY_DATABASE_URI = 'sqlite:///yourdatabase.db'
-    #SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "defaultsecretkey")
     JWT_ACCESS_TOKEN_EXPIRES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRES", 3600))
     USER_SERVICE_URL = os.getenv("USER_SERVICE_URL", "http://localhost:8000")

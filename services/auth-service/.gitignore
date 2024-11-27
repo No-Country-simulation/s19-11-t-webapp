@@ -1,0 +1,19 @@
+# Entornos virtuales
+venv/
+env/
+__pycache__/
+
+# Archivos de configuración locales
+.env
+
+# Archivos generados por Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Archivos de configuraciones de Docker
+docker-compose.override.yml
+
+# Ignorar la carpeta idea
+.idea/

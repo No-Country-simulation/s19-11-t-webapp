@@ -1,6 +1,6 @@
 import requests
-from ..connections.config import Config, get_redis_client
-from ..resources.logs.logger import logger
+from connections.config import Config, get_redis_client
+from resources.logs.logger import logger
 
 redis_client = get_redis_client()
 

@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
-from ..connections.config import get_redis_client
-from ..resources.logs.logger import logger
-from ..services.authentication_service import AuthService
-from ..services.authorization_service import role_required
+from connections.config import get_redis_client
+from resources.logs.logger import logger
+from services.authentication_service import AuthService
+from services.authorization_service import role_required
 
 auth = Blueprint('auth', __name__)
 redis_client = get_redis_client()
