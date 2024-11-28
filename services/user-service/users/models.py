@@ -3,6 +3,7 @@ from .Manager import UsuarioManager
 from especialidad.models import Especialidad
 from django.contrib.auth.models import AbstractUser
 
+
 class Usuario(AbstractUser):
     email = models.EmailField(unique=True)  # El email debe ser único
     telefono = models.CharField(max_length=15, blank=True, null=True)
@@ -21,6 +22,7 @@ class Usuario(AbstractUser):
     def __str__(self):
         return f'{self.email} {self.first_name} {self.last_name}'
     
+
 class Paciente(models.Model):
     id_paciente = models.AutoField(primary_key=True)
     id_usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)  # Elimina db_column

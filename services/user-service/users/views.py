@@ -1,4 +1,5 @@
 from django.db import transaction
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -28,6 +29,7 @@ class UsuariosViews(APIView):
 
 
 class PacienteViews(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, id=0):
         if id > 0:
             try:
@@ -96,18 +98,3 @@ class MedicoViews(APIView):
         medicos = Medico.objects.all()
         data = MedicoSerializer(medicos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
-
-
-class VerifyUserViews(APIView):
-    def post(self, request):
-        data = request.data
-        email = data.get('email')
-        password = data.get('password')
-
-        try:
-            usuario = Usuario.objects.get(email=email)
-            if usuario.check_password(password):
-                return Response({'message': 'Usuario autenticado'}, status=status.HTTP_200_OK)
-            return Response({'error': 'Contraseña incorrecta'}, status=status.HTTP_400_BAD_REQUEST)
-        except Usuario.DoesNotExist:
-            return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
