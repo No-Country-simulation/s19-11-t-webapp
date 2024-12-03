@@ -7,9 +7,13 @@ export const pool = mysql.createPool({
   user: config.db.user,
   password: config.db.password,
   database: config.db.database,
+  port: config.db.port,
   waitForConnections: true,
   connectionLimit: 20,
   queueLimit: 0,
 });
+
+const [rows] = await pool.query("SELECT 1 + 1 AS result");
+console.log("Conexión exitosa:", rows[0].result); // Debería imprimir "2"
 
 console.log("DB config", config.db);
