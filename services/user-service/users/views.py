@@ -5,10 +5,23 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Usuario, Paciente, Medico
 from .serializers import UsuarioSerializer, PacienteSerializer, MedicoSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 class UsuariosViews(APIView):
+    @swagger_auto_schema(
+        operation_description='Obtener una lista de todos los usuarios o un solo usuario por ID',
+        responses={
+            200: UsuarioSerializer(many=True),
+            404: 'No encontrado'
+        }
+    )
+
     def get(self, request, id=0):
+        '''
+        Obtener una lista de todos los usuarios o un solo usuario por ID.
+        '''
         if id > 0:
             try:
                 usuario = Usuario.objects.get(pk=id)
@@ -19,6 +32,16 @@ class UsuariosViews(APIView):
         usuarios = Usuario.objects.all()
         data = UsuarioSerializer(usuarios, many=True).data
         return Response(data, status=status.HTTP_200_OK)
+    
+
+    @swagger_auto_schema(
+        operation_description='Crear un nuevo usuario',
+        request_body=UsuarioSerializer,
+        responses={
+            201: UsuarioSerializer,
+            400: 'Solicitud incorrecta'
+        }
+    )
 
     def post(self, request):
         usuario_serializer = UsuarioSerializer(data=request.data)
@@ -30,7 +53,20 @@ class UsuariosViews(APIView):
 
 class PacienteViews(APIView):
     permission_classes = [AllowAny]
+
+
+    @swagger_auto_schema(
+        operation_description='Obtener una lista de todos los pacientes o un solo paciente por ID',
+        responses={
+            200: PacienteSerializer(many=True),
+            404: 'No encontrado'
+        }
+    )
+
     def get(self, request, id=0):
+        '''
+        Obtener una lista de todos los pacientes o un solo paciente por ID.
+        '''
         if id > 0:
             try:
                 paciente = Paciente.objects.get(pk=id)
@@ -43,8 +79,22 @@ class PacienteViews(APIView):
         data = PacienteSerializer(pacientes, many=True).data
         return Response(data, status=status.HTTP_200_OK)
     
+
+    @swagger_auto_schema(
+        operation_description='Crear un nuevo paciente',
+        request_body=PacienteSerializer,
+        responses={
+            201: PacienteSerializer,
+            400: 'Solicitud incorrecta'
+        }
+    )
+
     @transaction.atomic
     def post(self, request):
+        '''
+        Crear un nuevo paciente.
+        '''
+
         data = request.data
 
         # Usar el PacienteSerializer directamente
@@ -59,7 +109,18 @@ class PacienteViews(APIView):
 
 
 class MedicoViews(APIView):
+    @swagger_auto_schema(
+        operation_description='Obtener una lista de todos los médicos o un solo médico por ID',
+        responses={
+            200: MedicoSerializer(many=True),
+            404: 'No encontrado'
+        }
+    )
+
     def get(self, request, id=0):
+        '''
+        Obtener una lista de todos los médicos o un solo médico por ID.
+        '''
         if id > 0:
             try:
                 medico = Medico.objects.get(pk=id)
@@ -72,8 +133,31 @@ class MedicoViews(APIView):
         data = MedicoSerializer(medicos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
     
+
+    @swagger_auto_schema(
+        operation_description='Crear un nuevo médico',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'nombre': openapi.Schema(type=openapi.TYPE_STRING, description='Nombre del médico'),
+                'apellido': openapi.Schema(type=openapi.TYPE_STRING, description='Apellido del médico'),
+                'especialidad': openapi.Schema(type=openapi.TYPE_STRING, description='Especialidad del médico'),
+                'numero_licencia': openapi.Schema(type=openapi.TYPE_STRING, description='Número de licencia del médico')
+            },
+            required=['nombre', 'apellido', 'especialidad', 'numero_licencia']
+        ),
+        responses={
+            201: MedicoSerializer,
+            400: 'Solicitud incorrecta'
+        }
+    )
+
     @transaction.atomic
     def post(self, request):
+        '''
+        Crear un nuevo médico.
+        '''
+
         data = request.data
 
         # Usar el MedicoSerializer directamente

@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y \
     netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
-
 # Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 

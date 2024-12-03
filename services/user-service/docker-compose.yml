@@ -1,10 +1,9 @@
-version: '3.9'
-
 services:
   db:
     image: mysql:8.0
+    container_name: db-service
     ports:
-      - "3307:3306"
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: adminroot
       MYSQL_DATABASE: healthtech_usuario
@@ -17,17 +16,22 @@ services:
 
   web:
     build: .
-    container_name: user-services
-    command: ["sh", "-c", "until nc -z -v -w30 db 3306; do echo 'Waiting for MySQL...'; sleep 5; done; python manage.py runserver 0.0.0.0:8000"]
+    container_name: user-service
+    depends_on:
+      - db
+    command: >
+      sh -c "
+      until nc -z -v -w30 db 3306;
+      do echo 'Waiting for MySQL...'; sleep 5; done;
+      python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+      "
     volumes:
       - .:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
     environment:
-      - DJANGO_SETTINGS_MODULE=user_service.settings
-      - DATABASE_URL=mysql://admin:adminroot@db:3306/healthtech_usuario
+      DJANGO_SETTINGS_MODULE: user_service.settings
+      DATABASE_URL: mysql://admin:adminroot@db:3306/healthtech_usuario
     networks:
       - mynetwork
 
