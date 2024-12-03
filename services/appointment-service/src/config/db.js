@@ -7,9 +7,10 @@ export const pool = mysql.createPool({
   user: config.db.user,
   password: config.db.password,
   database: config.db.database,
+  port: config.db.port,
   waitForConnections: true,
   connectionLimit: 20,
   queueLimit: 0,
 });
 
-console.log("DB config", config.db);
+// console.log("DB config", config.db);

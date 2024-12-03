@@ -16,6 +16,9 @@ COPY . .
 # Instala nodemon globalmente
 RUN npm install -g nodemon
 
+# Instalar default-mysql-client
+# RUN apt-get update && apt-get install -y default-mysql-client
+
 # Expone el puerto de la aplicación
 EXPOSE 3000
 
