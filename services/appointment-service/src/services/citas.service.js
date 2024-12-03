@@ -126,7 +126,7 @@ export const citasService = {
   // Obtener citas de un médico
   getCitasByMedico: async (medicoId) => {
     try {
-      const query = `SELECT * FROM cita WHERE id_medico = ?`;
+      const query = `SELECT * FROM cita WHERE id_medico = ? and estado='agendada'`;
       const [rows] = await pool.query(query, [medicoId]);
       return rows;
     } catch (error) {

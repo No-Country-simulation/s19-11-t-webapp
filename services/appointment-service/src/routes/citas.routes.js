@@ -1,5 +1,14 @@
 import express from "express";
-import { getCitas, addCita, deleteCita, updateCita, getCitasByPaciente, getCitasByMedico, getCitasByFecha } from "../controllers/citas.controller.js";
+import {
+  getCitas,
+  addCita,
+  deleteCita,
+  updateCita,
+  getCitasByPaciente,
+  getCitasByMedico,
+  getCitasByFecha,
+  getHorariosDisponibles,
+} from "../controllers/citas.controller.js";
 
 export const citasRouter = express.Router();
 
@@ -19,7 +28,10 @@ citasRouter.delete("/:id", deleteCita);
 citasRouter.get("/fecha", getCitasByFecha);
 
 // Obtener citas por paciente
-citasRouter.get("/paciente/:pacienteId", getCitasByPaciente);
+citasRouter.get("/paciente/:id", getCitasByPaciente);
 
 // Obtener citas por medico
-citasRouter.get("/medico/:medicoId", getCitasByMedico);
+citasRouter.get("/medico/:id", getCitasByMedico);
+
+// Obtener horarios disponibles
+citasRouter.get("/disponibles", getHorariosDisponibles);

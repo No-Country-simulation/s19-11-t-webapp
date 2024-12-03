@@ -12,7 +12,7 @@ export const getHorarios = async (req, res) => {
 export const getHorarioByMedicoId = async (req, res) => {
   const { id } = req.params;
   const { dia } = req.query;
-  console.log("dia", dia);
+
   try {
     const horario = await horariosService.getHorarioByMedicoId(id, dia);
     if (!horario) {
@@ -96,11 +96,12 @@ export const deleteHorario = async (req, res) => {
   }
 };
 
+/*
 export const getHorariosLibresByMedicoId = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const horario = await horariosService.getHorarioByMedicoId(id); // TODO
+    const horario = await horariosService.getHorariosLibresByMedicoId(id); // TODO
 
     if (!horario) {
       return res.status(404).json({ message: "Horario no encontrado" });
@@ -127,3 +128,4 @@ export const getHorariosLibresByEspecialidad = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+*/

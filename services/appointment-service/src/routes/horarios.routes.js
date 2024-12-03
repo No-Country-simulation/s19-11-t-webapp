@@ -5,8 +5,8 @@ import {
   addHorario,
   updateHorario,
   deleteHorario,
-  getHorariosLibresByMedicoId,
-  getHorariosLibresByEspecialidad,
+  // getHorariosLibresByMedicoId,
+  // getHorariosLibresByEspecialidad,
 } from "../controllers/horarios.controller.js";
 
 const router = Router();
@@ -26,10 +26,10 @@ router.put("/:id", updateHorario);
 // Eliminar (o desactivar) un horario
 router.delete("/:id", deleteHorario);
 
-// Obtener horarios libres por médico
-router.get("/libres/medico/:id", getHorariosLibresByMedicoId);
+// // Obtener horarios libres por médico
+// router.get("/libres/medico/:id", getHorariosLibresByMedicoId);
 
-// Obtener horarios libres por médico
-router.get("/libres/especialidad/:id", getHorariosLibresByEspecialidad);
+// // Obtener horarios libres por médico
+// router.get("/libres/especialidad/:id", getHorariosLibresByEspecialidad);
 
 export default router;

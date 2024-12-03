@@ -13,7 +13,4 @@ export const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-const [rows] = await pool.query("SELECT 1 + 1 AS result");
-console.log("Conexión exitosa:", rows[0].result); // Debería imprimir "2"
-
-console.log("DB config", config.db);
+// console.log("DB config", config.db);
