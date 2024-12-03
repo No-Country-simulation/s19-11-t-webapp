@@ -12,7 +12,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - mynetwork
+      - mynetwork  # Cambié 'bridge' por 'mynetwork', que es una red definida por el usuario
 
   web:
     build: .
@@ -23,7 +23,7 @@ services:
       sh -c "
       until nc -z -v -w30 db 3306;
       do echo 'Waiting for MySQL...'; sleep 5; done;
-      python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+      python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000
       "
     volumes:
       - .:/app
@@ -33,10 +33,11 @@ services:
       DJANGO_SETTINGS_MODULE: user_service.settings
       DATABASE_URL: mysql://admin:adminroot@db:3306/healthtech_usuario
     networks:
-      - mynetwork
+      - mynetwork  # Cambié 'bridge' por 'mynetwork', que es una red definida por el usuario
 
 volumes:
   mysql_data:
 
 networks:
-  mynetwork:
+  mynetwork:  # Definí la red 'mynetwork' de usuario
+    driver: bridge
