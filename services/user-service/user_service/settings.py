@@ -21,6 +21,8 @@ SECRET_KEY = 'django-insecure-x9r36asbuin1uwotvrnlg!w^7rjgj1)eq46gy)fp#i!w6sjn7r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
 
+PROD = os.environ.get('PROD') == 'True'
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -105,7 +107,7 @@ WSGI_APPLICATION = 'user_service.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if DEBUG:
+if not PROD:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -163,10 +165,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Donde se recopilan los archivos estáticos
 STATIC_URL = '/static/'
 
-# Si estás usando contenedores, esta ruta se define para recopilar los archivos estáticos
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Directorios adicionales para buscar archivos estáticos
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # Verifica que apunta a tu directorio estático
-]

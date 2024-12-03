@@ -14,7 +14,8 @@ Para el correcto funcionamiento del servicio, es necesario configurar las variab
 El servicio requiere las siguientes variables de entorno para funcionar correctamente:
 
 - `SECRET_KEY`: Clave secreta para Django.
-- `DEBUG`: Controla el modo de depuración en el servicio. Por defecto, debe estar en `False`.
+- `DEBUG`: Controla el modo de depuración en el servicio. Por defecto, debe estar en `True`.
+- `PROD`: Controla el motor de base de datos. Por defecto, debe estar en `True`.
 - `HOST`: Dirección del host de la base de datos.
 - `PORT`: Puerto de la base de datos.
 - `DATABASE`: Nombre de la base de datos.
