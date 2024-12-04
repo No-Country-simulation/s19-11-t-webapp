@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Especialidad
 
-# Register your models here.
+# Registra tus modelos para que aparezcan en el panel de administración
+admin.site.register(Especialidad)
