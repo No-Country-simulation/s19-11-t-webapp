@@ -1,4 +1,5 @@
 import { pool } from "../config/db.js";
+import axios from 'axios';
 
 export const citasService = {
   // Obtener todas las citas con filtros opcionales
@@ -145,3 +146,54 @@ export const citasService = {
     }
   },
 };
+
+// ----------- Conexión con Microservicios HC y Mails ------------ //
+
+export const getPaciente = async (pacienteId) => {
+  try {
+    const response = await axios.get(`http://medicalhistoryservice:3001/pacientes/${pacienteId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener paciente", error);
+    return null; // En caso de error, devolvemos null para que se pueda manejar el fallo
+  }
+};
+
+export const getMedico = async (medicoId) => {
+  try {
+    const response = await axios.get(`http://medicalhistoryservice:3001/medicos/${medicoId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener médico", error);
+    return null; // En caso de error, devolvemos null
+  }
+};
+
+//const sendCitaConfirmation = async (email, pacienteNombre, medicoNombre, fechaCita) => {
+  export const sendCitaConfirmation = async (id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo) => {
+    const data = {
+      id_medico: id_medico,
+      id_paciente: id_paciente,
+      fecha: fecha,
+      hora_inicio: hora_inicio,
+      hora_fin: hora_fin,
+      tipo: tipo
+    };
+  
+    try {
+      const response = await axios.post('http://email-service:3002/sendConfirmation', data);
+  
+      // Verificar que el correo se haya enviado correctamente
+      if (response.status === 200) {
+        console.log("Correo de confirmación enviado");
+        return { success: true, message: "Correo de confirmación enviado exitosamente" };
+      } else {
+        console.log("Error al enviar correo de confirmación:", response.data);
+        return { success: false, message: "Error al enviar correo de confirmación" };
+      }
+    } catch (error) {
+      console.error("Error al hacer la solicitud:", error);
+      return { success: false, message: "Error al hacer la solicitud al servicio de correo" };
+    }
+  };
+  

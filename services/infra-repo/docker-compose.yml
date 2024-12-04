@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+
+  # Microservicio de Citas
+  appointment-service:
+    build:
+      context: ../appointment-service
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: ["nodemon", "src/app.js"]
+    depends_on:
+      - db
+      - email-service
+    networks:
+      - backend
+
+
+  # Microservicio de correo
+  email-service:
+    build:
+      context: ../notification-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_SECURE=true 
+      - MAIL_HOST_USER='e.mozo.arg@gmail.com'
+      - MAIL_HOST_PASSWORD='pgwuctlkcvwjxrgj'
+    depends_on:
+      - db
+    networks:
+      - backend
+
+
+  # Base de datos
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: macarena
+      MYSQL_DATABASE: citas
+    ports:
+      - "3307:3306"
+    networks:
+      - backend
+
+
+networks:
+  backend:
+    driver: bridge

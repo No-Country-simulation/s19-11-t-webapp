@@ -19,6 +19,10 @@ export const addCita = async (req, res) => {
   const { id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo } = req.body;
 
   try {
+    // Obtener el paciente y el médico para crear cita y enviar el correo
+    // const paciente = await getPaciente(id_paciente);
+    // const medico = await getMedico(id_medico);
+
     // Validar campos requeridos
     if (!id_medico || !id_paciente || !fecha || !hora_inicio || !hora_fin || !tipo) {
       return res.status(400).json({ message: "Todos los campos son obligatorios" });
@@ -46,11 +50,28 @@ export const addCita = async (req, res) => {
     }
 
     const newCita = await citasService.addCita({ id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo });
-    res.status(201).json(newCita);
+
+    // Enviar correo de confirmación
+    let confirmationResponse = null;
+    if (id_paciente && id_medico) {
+      confirmationResponse = await sendCitaConfirmation(id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo);
+    }
+
+    // Verificar si el correo fue enviado correctamente
+    if (confirmationResponse && confirmationResponse.success) {
+      return res.status(201).json({
+        message: "Cita creada exitosamente. Revisa tu correo para confirmar la cita.",
+        cita: newCita
+      });
+    } else {
+      return res.status(500).json({ message: "La cita fue creada, pero hubo un problema al enviar el correo de confirmación. Intenta nuevamente." });
+    }
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Actualizar una cita existente
 export const updateCita = async (req, res) => {
