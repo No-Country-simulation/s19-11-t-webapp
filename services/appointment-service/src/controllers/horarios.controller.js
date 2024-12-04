@@ -1,4 +1,6 @@
+import dayjs from "dayjs";
 import { horariosService } from "../services/horarios.service.js";
+import { citasService } from "../services/citas.service.js";
 
 export const getHorarios = async (req, res) => {
   try {
@@ -96,36 +98,85 @@ export const deleteHorario = async (req, res) => {
   }
 };
 
-/*
-export const getHorariosLibresByMedicoId = async (req, res) => {
-  const { id } = req.params;
-
+export const getHorariosDisponibles = async (req, res) => {
+  const { id_medico, duracion = 30, limite = 10, dia = null } = req.query;
   try {
-    const horario = await horariosService.getHorariosLibresByMedicoId(id); // TODO
+    // 1. Obtener horarios de trabajo del médico
+    const horarios = await horariosService.getHorarioByMedicoId(id_medico, dia);
+    if (!horarios || horarios.length === 0) {
+      return res.status(404).json({ message: "El médico no tiene horarios definidos." });
+    }
+    // console.log("horarios disponibles del medico", horarios);
 
-    if (!horario) {
-      return res.status(404).json({ message: "Horario no encontrado" });
+    // 2. Obtener citas agendadas del médico desde hoy en adelante
+    const hoy = dayjs().startOf("day").format("YYYY-MM-DD");
+    const citas = await citasService.getCitasByMedico(id_medico, hoy);
+
+    // console.log("citas del medico", citas);
+
+    // 3. Preparar bloques disponibles por día
+    const horariosDisponibles = [];
+    let encontrados = 0; // Contador de horarios encontrados
+    let diasRecorridos = 0; // Contador de días recorridos
+    const maxDias = 30; // Máximo de días a recorrer para evitar bucles infinitos
+
+    while (encontrados < limite && diasRecorridos < maxDias) {
+      const fecha = dayjs(hoy).add(diasRecorridos, "day");
+      const diaSemana = fecha.day();
+
+      // Filtrar horarios del médico para el día de la semana actual
+      const horariosDia = horarios.filter((h) => h.dia_semana === diaSemana);
+
+      horariosDia.forEach((horario) => {
+        // Dividir horario en bloques de la duración especificada
+        const bloques = dividirEnBloques(horario.hora_inicio, horario.hora_fin, duracion);
+
+        // console.log("bloques", bloques);
+
+        bloques.forEach((bloque) => {
+          // Verificar si el bloque está ocupado por una cita
+          // console.log(`Bloque ${bloque.inicio} - ${bloque.fin}`);
+          const ocupado = citas.some((cita) => {
+            let fechaCita = dayjs(cita.fecha);
+            // console.log(`Cita: ${cita.hora_inicio} - ${cita.hora_fin}`);
+            return (
+              fechaCita.format("YYYY-MM-DD") === fecha.format("YYYY-MM-DD") &&
+              ((bloque.inicio >= cita.hora_inicio && bloque.inicio < cita.hora_fin) || (bloque.fin > cita.hora_inicio && bloque.fin <= cita.hora_fin))
+            );
+          });
+          if (!ocupado && encontrados < limite) {
+            horariosDisponibles.push({
+              fecha: fecha.format("YYYY-MM-DD"),
+              inicio: bloque.inicio,
+              fin: bloque.fin,
+            });
+            encontrados++;
+          }
+        });
+      });
+
+      diasRecorridos++; // Avanzar al siguiente día
     }
 
-    res.json(horario);
+    res.status(200).json(horariosDisponibles);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-export const getHorariosLibresByEspecialidad = async (req, res) => {
-  const { id } = req.params;
+// Función para dividir en bloques
+const dividirEnBloques = (horaInicio, horaFin, duracion) => {
+  const bloques = [];
+  let inicio = dayjs().hour(horaInicio.split(":")[0]).minute(horaInicio.split(":")[1]).second(horaInicio.split(":")[2]);
+  const fin = dayjs().hour(horaFin.split(":")[0]).minute(horaFin.split(":")[1]).second(horaInicio.split(":")[2]);
 
-  try {
-    const horario = await horariosService.getHorarioByMedicoId(id); // TODO
+  while (inicio.isBefore(fin)) {
+    const bloqueFin = inicio.add(duracion, "minute");
+    if (bloqueFin.isAfter(fin)) break;
 
-    if (!horario) {
-      return res.status(404).json({ message: "Horario no encontrado" });
-    }
-
-    res.json(horario);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    bloques.push({ inicio: inicio.format("HH:mm:ss"), fin: bloqueFin.format("HH:mm:ss") });
+    inicio = bloqueFin;
   }
+
+  return bloques;
 };
-*/
