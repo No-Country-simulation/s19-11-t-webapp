@@ -30,7 +30,6 @@ class Paciente(models.Model):
     direccion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     genero = models.CharField(max_length=1)
-    numero_seguridad_social = models.CharField(max_length=15)
     historial_medico = models.IntegerField(null=True)
 
     class Meta:

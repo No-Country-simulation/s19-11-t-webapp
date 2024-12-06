@@ -6,38 +6,15 @@ from .models import Usuario, Paciente, Medico
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['email', 'password', 'first_name', 'last_name', 'telefono']
-        extra_kwargs = {
-            'password': {'write_only': True},  # La contraseña no se incluye en las respuestas
-        }
-        partial = True
+        fields = ['email', 'first_name', 'last_name']
 
-    def create(self, validated_data):
-        '''
-        Crea un usuario usando el manager y hashea su contraseña.
-        '''
-        return Usuario.objects.create_user(**validated_data)
-
-    def update(self, instance, validated_data):
-        '''
-        Actualiza un usuario, incluyendo el cambio de contraseña si se proporciona.
-        '''
-        password = validated_data.pop('password', None)
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-        if password:
-            instance.set_password(password)
-        instance.save()
-        return instance
-    
 
 class PacienteSerializer(serializers.ModelSerializer):
-    usuario = UsuarioSerializer()
+    usuario = UsuarioSerializer(source='id_usuario')
 
     class Meta:
         model = Paciente
         fields = ['usuario', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'historial_medico']
-        partial = True
 
     def validate(self, attrs):
         if not attrs.get('documento'):
@@ -52,7 +29,7 @@ class PacienteSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Extraer datos de usuario
-        usuario_data = validated_data.pop('usuario')
+        usuario_data = validated_data.pop('id_usuario')
 
         # Validar y crear usuario
         usuario_serializer = UsuarioSerializer(data=usuario_data)
@@ -64,10 +41,30 @@ class PacienteSerializer(serializers.ModelSerializer):
         # Crear paciente
         paciente = Paciente.objects.create(id_usuario=usuario, **validated_data)
         return paciente
-    
+
+    def update(self, instance, validated_data):
+        usuario_data = validated_data.pop('id_usuario')
+        usuario = instance.id_usuario
+
+        instance.documento = validated_data.get('documento', instance.documento)
+        instance.direccion = validated_data.get('direccion', instance.direccion)
+        instance.fecha_nacimiento = validated_data.get('fecha_nacimiento', instance.fecha_nacimiento)
+        instance.genero = validated_data.get('genero', instance.genero)
+        instance.numero_seguridad_social = validated_data.get('numero_seguridad_social', instance.numero_seguridad_social)
+        instance.historial_medico = validated_data.get('historial_medico', instance.historial_medico)
+        instance.save()
+
+        usuario.email = usuario_data.get('email', usuario.email)
+        usuario.first_name = usuario_data.get('first_name', usuario.first_name)
+        usuario.last_name = usuario_data.get('last_name', usuario.last_name)
+        usuario.telefono = usuario_data.get('telefono', usuario.telefono)
+        usuario.save()
+
+        return instance
+
 
 class MedicoSerializer(serializers.ModelSerializer):
-    usuario = UsuarioSerializer()
+    usuario = UsuarioSerializer(source='id_usuario')
 
     class Meta:
         model = Medico
