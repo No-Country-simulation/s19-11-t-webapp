@@ -1,12 +1,20 @@
-import { Navbar, Nav, Button, Container } from 'react-bootstrap';
-import './styles/navbar.css'
 
-function CustomNavbar() {
+import { Navbar, Nav, Button, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import "./styles/navbar.css";
+
+function CustomNavbar({ isLoggedIn, handleLogout, onShowModal }) {
+  const navigate = useNavigate(); 
+
+  const logoutAndNavigate = () => {
+    handleLogout(); 
+    navigate("/"); 
+  };
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm">
       <Container>
         {/* Logo */}
-        <Navbar.Brand href="#">
+        <Navbar.Brand href="/">
           <img
             src="./src/assets/img/navbar/CareNetprop1.png"
             alt="CareNet"
@@ -20,7 +28,7 @@ function CustomNavbar() {
         {/* Navbar links */}
         <Navbar.Collapse id="navbar-nav">
           <Nav className="mx-auto">
-            <Nav.Link href="#" className="text-dark fw-bold">
+            <Nav.Link href="/" className="text-dark fw-bold">
               Home
             </Nav.Link>
             <Nav.Link href="#" className="text-dark fw-bold">
@@ -37,14 +45,35 @@ function CustomNavbar() {
             </Nav.Link>
           </Nav>
 
-          {/* Buttons */}
+          {/* Conditional Buttons */}
           <div className="d-flex align-items-center">
-            <Nav.Link href="#" className="text-primary fw-bold me-3">
-              Sign Up
-            </Nav.Link>
-            <Button variant="primary" className="fw-bold btn-login">
-              Log In
-            </Button>
+            {!isLoggedIn ? (
+              <>
+                {/* Show Login/Signup buttons if not logged in */}
+                <Nav.Link
+                  href="#"
+                  className="text-primary fw-bold me-3"
+                  onClick={() => onShowModal("signup")}
+                >
+                  Sign Up
+                </Nav.Link>
+                <Button
+                  variant="primary"
+                  className="fw-bold btn-login"
+                  onClick={() => onShowModal("login")}
+                >
+                  Log In
+                </Button>
+              </>
+            ) : (
+              <Button
+                variant="danger"
+                className="fw-bold"
+                onClick={logoutAndNavigate}
+              >
+                Logout
+              </Button>
+            )}
           </div>
         </Navbar.Collapse>
       </Container>
