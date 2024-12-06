@@ -3,7 +3,7 @@ version: "3.8"
 services:
 
   # Microservicio de Citas
-  appointment-service:
+  appointment_service:
     build:
       context: ../appointment-service
     ports:
@@ -12,32 +12,12 @@ services:
       - NODE_ENV=development
     command: ["nodemon", "src/app.js"]
     depends_on:
-      - db
-      - email-service
+      - db_appointments
+      - notification_service
     networks:
       - backend
 
-
-  # Microservicio de correo
-  email-service:
-    build:
-      context: ../notification-service
-    ports:
-      - "3002:3002"
-    environment:
-      - MAIL_HOST=smtp.gmail.com
-      - MAIL_PORT=587
-      - MAIL_SECURE=true 
-      - MAIL_HOST_USER='e.mozo.arg@gmail.com'
-      - MAIL_HOST_PASSWORD='pgwuctlkcvwjxrgj'
-    depends_on:
-      - db
-    networks:
-      - backend
-
-
-  # Base de datos
-  db:
+  db_appointments:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: macarena
@@ -47,6 +27,61 @@ services:
     networks:
       - backend
 
+  # Microservicio de Correo
+  notification_service:
+    build:
+      context: ../notification-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MAIL_SERVER=smtp.gmail.com
+      - MAIL_PORT=587
+      - MAIL_USE_TLS=True
+      - MAIL_USERNAME=healthtechnotifications@gmail.com
+      - MAIL_PASSWORD=hmof pcer tmbo dxhd
+    depends_on:
+      - db_appointments
+    networks:
+      - backend
+
+  # Microservicio de Usuarios
+  user_service:
+    build:
+      context: ../user-service
+    depends_on:
+      - db_users
+    command: >
+      sh -c "
+      until nc -z -v -w30 db_users 3306;
+      do echo 'Waiting for MySQL...'; sleep 5; done;
+      python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+      "
+    volumes:
+      - .:/app/user-service/
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: ../user-service/user_service.settings
+      DATABASE_URL: mysql://admin:adminroot@db_users:3306/healthtech_usuario
+    networks:
+      - backend
+
+  db_users:
+    image: mysql:8.0
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: adminroot
+      MYSQL_DATABASE: healthtech_usuario
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminroot
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
 
 networks:
   backend:

@@ -15,3 +15,10 @@ Ejecutar el script services/appointment-service/db.sql para configurar la base d
 
 3. Acceder a los Recursos <br>
 Los servicios estarán disponibles a través de los puertos configurados en los contenedores. Acceder a ellos desde el browser o cualquier herramienta de desarrollo (Postman, cURL, etc.).
+
+Notas: <br>
+Acceder y salir del contenedor: <br>
+```bash
+docker exec -it infra-repo-email-service-1 /bin/bash
+exit
+```

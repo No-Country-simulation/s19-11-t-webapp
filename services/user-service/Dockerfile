@@ -2,10 +2,10 @@
 FROM python:3.10-slim
 
 # Establecer el directorio de trabajo
-WORKDIR /app
+WORKDIR /app/user-service/
 
 # Copiar los archivos de la aplicación
-COPY . /app
+COPY . /app/user-service/
 
 # Instalar dependencias del sistema necesarias para mysqlclient y netcat
 RUN apt-get update && apt-get install -y \

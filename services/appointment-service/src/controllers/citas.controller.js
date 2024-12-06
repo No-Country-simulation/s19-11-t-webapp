@@ -52,10 +52,10 @@ export const addCita = async (req, res) => {
     const newCita = await citasService.addCita({ id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo });
 
     // Enviar correo de confirmación
-    let confirmationResponse = null;
-    if (id_paciente && id_medico) {
-      confirmationResponse = await sendCitaConfirmation(id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo);
-    }
+    //let confirmationResponse = null;
+    //if (id_paciente && id_medico) {
+    //  confirmationResponse = await sendCitaConfirmation(id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo);
+    //}
 
     // Verificar si el correo fue enviado correctamente
     if (confirmationResponse && confirmationResponse.success) {

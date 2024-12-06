@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copia el código de la aplicación al contenedor
-COPY . .
+COPY . /app/appointment-service
 
 # Instala nodemon globalmente
 RUN npm install -g nodemon
