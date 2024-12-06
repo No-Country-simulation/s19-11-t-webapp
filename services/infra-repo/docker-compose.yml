@@ -44,6 +44,18 @@ services:
     networks:
       - backend
 
+  # Microservicio de Historia Clínica
+  medical-record-service:
+    build:
+      context: ../mediacl-record-service
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "start:dev"]
+    networks:
+      - backend
+
   # Microservicio de Usuarios
   user_service:
     build:
