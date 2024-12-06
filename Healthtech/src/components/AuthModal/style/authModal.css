@@ -1,0 +1,29 @@
+/* Modal Custom Styles */
+.custom-input {
+    border: 2px solid transparent;
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .custom-input:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5);
+  }
+  
+  .gender-button {
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .gender-button:hover {
+    transform: scale(1.05);
+  }
+  
+  .gender-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+  }
+  

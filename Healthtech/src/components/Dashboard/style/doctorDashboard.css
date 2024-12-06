@@ -1,0 +1,68 @@
+.dashboard-container {
+    background-color: #007bff;
+    height: 100vh;
+    color: white;
+  }
+  
+  .sidebar {
+    background-color: #0056b3;
+    height: 100vh;
+    padding: 1rem 0;
+  }
+  
+  .sidebar-icon {
+    color: white;
+    font-size: 1.5rem;
+    margin: 1rem auto;
+    text-align: center;
+  }
+  
+  .main-content {
+    padding: 2rem;
+  }
+  
+  .search-bar .search-input {
+    border-radius: 30px;
+    border: none;
+    padding: 0.5rem 1rem;
+  }
+  
+  .user-profile img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .greeting-card {
+    background: linear-gradient(90deg, #0056b3, #007bff);
+    color: white;
+    border: none;
+  }
+  
+  .stats-card {
+    background: #ffffff;
+    color: #0056b3;
+    text-align: center;
+  }
+  
+  .patient-list-section .circle-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .consultation-card {
+    background: #ffffff;
+    color: #0056b3;
+    border-radius: 15px;
+  }
+  
+  .upcoming-section .card-body {
+    background: #ffffff;
+    color: #0056b3;
+  }
+  
