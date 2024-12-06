@@ -8,7 +8,7 @@ function CustomNavbar() {
         {/* Logo */}
         <Navbar.Brand href="#">
           <img
-            src="./src/assets/img/navbar/carenet_logo.png"
+            src="./src/assets/img/navbar/CareNetprop1.png"
             alt="CareNet"
             height="40"
           />
