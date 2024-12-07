@@ -1,0 +1,88 @@
+/* Navbar container styles */
+.navbar {
+    background-color: #f8f9fa; /* Light gray background */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  /* Logo styles */
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-brand img {
+    margin-right: 8px;
+  }
+  
+  .navbar-brand span {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50; /* Navy color for CareNet text */
+  }
+  
+  /* Navbar links styles */
+  .navbar-nav .nav-link {
+    font-size: 1rem;
+    font-weight: 600; /* Semi-bold links */
+    color: #2c3e50 !important; /* Navy */
+    text-transform: capitalize; /* Capitalize the first letter */
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #007bff !important; /* Bootstrap primary blue */
+    text-decoration: underline;
+  }
+  
+  .navbar-nav .nav-link.active {
+    color: #007bff !important; /* Primary blue for the active link */
+    text-decoration: underline; /* Add underline to active link */
+  }
+  
+  /* Signup link styles */
+  .navbar-nav .text-primary {
+    color: #007bff !important; /* Bright blue for Sign Up link */
+    font-weight: bold;
+  }
+  
+  /* Login button styles */
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    border-color: #0056b3;
+  }
+  
+  /* Center alignment for the nav links */
+  .navbar-nav {
+    margin: 0 auto;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 991px) {
+    .navbar-nav {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .d-flex {
+      justify-content: center;
+    }
+  }
+
+  .btn-login {
+    background-color: #dc3545 ; 
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 0.5rem 1.2rem;
+    font-size: 1rem;
+    color: #fff; 
+  }
