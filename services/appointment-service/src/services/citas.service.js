@@ -2,7 +2,12 @@ import { pool } from "../config/db.js";
 
 export const citasService = {
   // Obtener todas las citas con filtros opcionales
-  getAllCitas: async ({ fecha, estado, pacienteId, medicoId }) => {
+  getAllCitas: async ({ fecha, estado, pacienteId, medicoId, sort, order, limit }) => {
+    console.log("pacienteId", pacienteId);
+    console.log("estado", estado);
+    console.log("limit", limit);
+    console.log("sort", sort);
+    console.log("order", order);
     try {
       let query = `SELECT * FROM cita WHERE 1=1`;
       const values = [];
@@ -23,7 +28,16 @@ export const citasService = {
         query += ` AND id_medico = ?`;
         values.push(medicoId);
       }
-
+      if (sort) {
+        query += ` ORDER BY ${sort}`;
+        if (order) {
+          query += ` ${order}`;
+        }
+      }
+      if (limit) {
+        query += ` LIMIT ${limit}`;
+      }
+      console.log("query:", query);
       const [rows] = await pool.query(query, values);
       return rows;
     } catch (error) {
