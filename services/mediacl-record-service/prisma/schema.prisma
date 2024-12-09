@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model MedicalHistory {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  pacienteId     String           @unique
+  historiaGeneral HistoriaGeneral?
+  consultas      Consulta[]
+  eventosClinicos EventoClinico[]
+}
+
+type HistoriaGeneral {
+  fechaCreacion  DateTime
+  notasGenerales String
+}
+
+type Consulta {
+  idConsulta     String
+  fechaConsulta  DateTime
+  motivoConsulta String
+  diagnostico    String
+  tratamiento    String
+  observaciones  String
+  medicoId       String
+  examenes       Examen[]
+}
+
+type Examen {
+  examenId       String
+}
+
+type EventoClinico {
+  tipoEvento     String
+  descripcion    String
+  fecha          DateTime
+}
