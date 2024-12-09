@@ -9,7 +9,7 @@ services:
     volumes:
       - ./srv:/usr/src/app
     ports:
-      - "3000:3000"
+      - "3005:3005"
     environment:
       DATABASE_URL: "mongodb+srv://emozoarg:L1bVqyEhSAoOJXQJ@cluster0.pbqie.mongodb.net/Telemedicina"
       PORT: 3005
