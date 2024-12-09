@@ -25,6 +25,7 @@ const MedicalRecordsContainer = () => {
           `http://localhost:3005/medical-history/${HARDCODED_PATIENT_ID}`
         );
         setMedicalHistory(response.data);
+        console.log("Fetched medical history:", response.data);
 
         // Set the most recent consultation as selected by default
         if (response.data?.consultas?.length > 0) {
@@ -48,23 +49,20 @@ const MedicalRecordsContainer = () => {
       const updatedData = {
         pacienteId: HARDCODED_PATIENT_ID,
         consultas: [
-          ...(medicalHistory?.consultas || []),
           {
             ...newConsulta,
             medicoId: HARDCODED_DOCTOR_ID,
             idConsulta: `consulta-${Date.now()}`,
           },
         ],
-        eventosClinicos: [
-          ...(medicalHistory?.eventosClinicos || []),
-          newEventoClinico,
-        ],
+        eventosClinicos: [newEventoClinico],
       };
 
       const response = await axios.post(
         "http://localhost:3005/medical-history",
         updatedData
       );
+      console.log("New consultation added:", updatedData);
       setMedicalHistory(response.data);
 
       // Update selected consultation to the newly added one
