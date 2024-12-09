@@ -1,4 +1,6 @@
 from django.db import transaction
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,8 +10,10 @@ from .serializers import UsuarioSerializer, PacienteSerializer, MedicoSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class UsuariosViews(APIView):
+    permission_classes = [AllowAny]
+
     @swagger_auto_schema(
         operation_description='Obtener una lista de todos los usuarios o un solo usuario por ID',
         responses={
@@ -50,7 +54,7 @@ class UsuariosViews(APIView):
             return Response(usuario_serializer.data, status=status.HTTP_201_CREATED)
         return Response(usuario_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class PacienteViews(APIView):
     permission_classes = [AllowAny]
 
@@ -107,7 +111,7 @@ class PacienteViews(APIView):
 
         return Response({'message': 'Paciente creado exitosamente'}, status=status.HTTP_201_CREATED)
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class MedicoViews(APIView):
     @swagger_auto_schema(
         operation_description='Obtener una lista de todos los médicos o un solo médico por ID',
