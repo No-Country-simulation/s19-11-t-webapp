@@ -22,7 +22,7 @@ class HistoriaGeneralDto {
 class ExamenDto {
   @ApiProperty({ description: "Exam ID" })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   examenId: string;
 }
 
@@ -72,16 +72,16 @@ class ConsultaDto {
 class EventoClinicoDto {
   @ApiProperty({ description: "Type of clinical event" })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   tipoEvento: string;
 
   @ApiProperty({ description: "Description of the event" })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   descripcion: string;
 
   @ApiProperty({ description: "Date of the event" })
-  @IsNotEmpty()
+  @IsOptional()
   fecha: string;
 }
 
