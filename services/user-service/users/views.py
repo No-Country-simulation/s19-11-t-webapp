@@ -54,7 +54,6 @@ class UsuariosViews(APIView):
 class PacienteViews(APIView):
     permission_classes = [AllowAny]
 
-
     @swagger_auto_schema(
         operation_description='Obtener una lista de todos los pacientes o un solo paciente por ID',
         responses={
@@ -109,6 +108,8 @@ class PacienteViews(APIView):
 
 
 class MedicoViews(APIView):
+    permission_classes = [AllowAny]
+    
     @swagger_auto_schema(
         operation_description='Obtener una lista de todos los médicos o un solo médico por ID',
         responses={
