@@ -1,13 +1,15 @@
 import dayjs from "dayjs";
 import { citasService } from "../services/citas.service.js";
 import { horariosService } from "../services/horarios.service.js";
+import axios from "axios";
 
 // Obtener todas las citas con filtros opcionales
 export const getCitas = async (req, res) => {
   try {
-    const { fecha, estado, pacienteId, medicoId } = req.query;
+    const { fecha, estado, pacienteId, medicoId, sort, order, limit } = req.query;
 
-    const citas = await citasService.getAllCitas({ fecha, estado, pacienteId, medicoId });
+    const citas = await citasService.getAllCitas({ fecha, estado, pacienteId, medicoId, sort, order, limit });
+
     res.json(citas);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -46,7 +48,8 @@ export const addCita = async (req, res) => {
     }
 
     const newCita = await citasService.addCita({ id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo });
-    res.status(201).json(newCita);
+    // res.status(201).json(newCita);
+    res.status(201).json({ status: "ok", message: "La cita fue agregada correctamente", data: newCita });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

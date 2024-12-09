@@ -1,0 +1,210 @@
+/* Hero Section */
+.hero-section {
+    background-color: #f8f9fa; /* Light background */
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2c3e50; /* Dark gray/navy */
+    line-height: 1.3;
+  }
+  
+  .hero-title .text-danger {
+    color: #dc3545; /* Red for CareNet */
+  }
+  
+  .hero-title .text-primary {
+    color: #007bff; /* Bootstrap primary blue */
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #6c757d; /* Bootstrap muted gray */
+  }
+  
+  .hero-buttons .btn-appointments {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 0.6rem 1.5rem;
+  }
+  
+  .hero-buttons .btn-appointments:hover {
+    background-color: #0056b3;
+  }
+  
+  .hero-buttons .btn-watch-video {
+    color: #dc3545;
+    border-color: #dc3545;
+    font-size: 1rem;
+    padding: 0.5rem 1.2rem;
+  }
+  
+  .hero-buttons .btn-watch-video i {
+    margin-right: 0.5rem;
+  }
+  
+  .hero-image-wrapper {
+    position: relative;
+  }
+  
+  .hero-doctor-image {
+    display: none;
+    max-width:60% !important;
+    height: auto;
+    border-radius: 10px;
+  }
+
+  @media screen and (min-width: 768px) {
+    .hero-doctor-image {
+      display: block;
+    }
+    .badge-24-7 {
+      display: block;
+    }
+    
+  }
+  
+  .badge-24-7 {
+    display: none;
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    text-align: center;
+    color: #007bff; /* Primary blue */
+  }
+  
+  .badge-professionals {
+    position: absolute;
+    bottom: 10%;
+    left: 5%;
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .badge-professionals .badge-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  .badge-professionals .badge-text {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  
+  .badge-professionals .badge-count {
+    background-color: #dc3545; /* Danger red */
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 0.3rem 0.6rem;
+    border-radius: 50%;
+  }
+ 
+  /* ===================================== */
+
+  /* Search Bar Section */
+.search-bar-section {
+    background-color: #f8f9fa; /* Light gray background */
+  }
+  
+  .search-bar-section .shadow-sm {
+    border-radius: 10px;
+  }
+  
+  .search-input {
+    border: 2px solid transparent;
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 4px rgba(0, 123, 255, 0.5);
+  }
+  
+  .availability-switch {
+    transform: scale(1.2); /* Make the switch larger */
+  }
+  
+  .search-button {
+    background-color: #007bff;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+  
+  .search-button:hover {
+    background-color: #0056b3;
+  }
+
+  /* =================================================== */
+
+  /* Services Section */
+.services-section {
+  background-color: #f8f9fa; /* Light gray background */
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: #6c757d; /* Muted text */
+}
+
+.service-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.service-card-img {
+  border-radius: 10px 10px 0 0;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.service-card .card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.service-card .card-text {
+  font-size: 0.9rem;
+  color: #6c757d; 
+}
+
+.learn-more-link {
+  color: #007bff; 
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.learn-more-link:hover {
+  color: #0056b3; 
+}
