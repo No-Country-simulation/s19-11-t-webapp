@@ -1,6 +1,7 @@
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import "./style/homeScreen.css";
 import services from "./utils/servicesData";
+import MedicalRecordsButton from "../medicalRecords/MedicalRecordsButton";
 
 function HomeScreen() {
   return (
@@ -12,16 +13,18 @@ function HomeScreen() {
             {/* Left Side: Text and Buttons */}
             <Col md={6}>
               <h1 className="hero-title">
-                Providing Quality <span className="text-danger">CareNet</span> For A
+                Providing Quality <span className="text-danger">CareNet</span>{" "}
+                For A
                 <br />
                 <span className="text-primary">Brighter</span> And{" "}
                 <span className="text-primary">Healthy</span> Future
               </h1>
               <p className="hero-subtitle mt-4">
-                At Our Hospital, We Are Dedicated To Providing Exceptional Medical
-                Care To Our Patients And Their Families. Our Experienced Team Of
-                Medical Professionals, Cutting-Edge Technology, And Compassionate
-                Approach Make Us A Leader In The Healthcare Industry.
+                At Our Hospital, We Are Dedicated To Providing Exceptional
+                Medical Care To Our Patients And Their Families. Our Experienced
+                Team Of Medical Professionals, Cutting-Edge Technology, And
+                Compassionate Approach Make Us A Leader In The Healthcare
+                Industry.
               </p>
               <div className="hero-buttons mt-4">
                 <Button variant="primary" className="btn-appointments me-3">
@@ -30,6 +33,7 @@ function HomeScreen() {
                 <Button variant="outline-danger" className="btn-watch-video">
                   <i className="bi bi-play-circle"></i> Watch Video
                 </Button>
+                <MedicalRecordsButton />
               </div>
             </Col>
 
@@ -94,36 +98,39 @@ function HomeScreen() {
 
       {/* Services */}
       <section className="services-section py-5">
-      <Container>
-        <div className="text-center mb-5">
-          <h2 className="section-title text-primary">Services we provide</h2>
-          <p className="section-subtitle">
-            Lorem ipsum dolor sit amet consectetur adipiscing elit semper dalar elementum tempus hac tellus libero accumsan.
-          </p>
-        </div>
-        <Row>
-          {services.map((service, index) => (
-            <Col md={4} className="mb-4" key={index}>
-              <Card className="service-card h-100">
-                <Card.Img
-                  variant="top"
-                  src={service.image} // Replace with actual image path
-                  alt={service.title}
-                  className="service-card-img"
-                />
-                <Card.Body>
-                  <Card.Title className="text-danger">{service.title}</Card.Title>
-                  <Card.Text>{service.description}</Card.Text>
-                  <a href={service.link} className="learn-more-link">
-                    Learn more →
-                  </a>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-    </section>
+        <Container>
+          <div className="text-center mb-5">
+            <h2 className="section-title text-primary">Services we provide</h2>
+            <p className="section-subtitle">
+              Lorem ipsum dolor sit amet consectetur adipiscing elit semper
+              dalar elementum tempus hac tellus libero accumsan.
+            </p>
+          </div>
+          <Row>
+            {services.map((service, index) => (
+              <Col md={4} className="mb-4" key={index}>
+                <Card className="service-card h-100">
+                  <Card.Img
+                    variant="top"
+                    src={service.image} // Replace with actual image path
+                    alt={service.title}
+                    className="service-card-img"
+                  />
+                  <Card.Body>
+                    <Card.Title className="text-danger">
+                      {service.title}
+                    </Card.Title>
+                    <Card.Text>{service.description}</Card.Text>
+                    <a href={service.link} className="learn-more-link">
+                      Learn more →
+                    </a>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      </section>
     </>
   );
 }
