@@ -2,11 +2,17 @@ from rest_framework.views import APIView
 from rest_framework.response import Response  
 from rest_framework import status
 from .models import Especialidad
+from rest_framework.permissions import AllowAny
 from .serializers import EspecialidadSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
+
+@method_decorator(csrf_exempt, name='dispatch')
 class EspecialidadView(APIView):
+    permission_classes = [AllowAny]
     '''
     Devuelve las especialidades disponibles, o crea una nueva especialidad. Además, permite obtener una especialidad por ID.
     '''

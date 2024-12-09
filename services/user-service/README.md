@@ -348,67 +348,6 @@ Se espera el siguiente mensaje, junto al código HTTP 200 OK.
 | `refresh_token` | `HTTPOnly` | `True` | Token para renovar acceso. |
 | `access_token`  | `HTTPOnly` | `True` | Token de acceso temporal.  |
 
-#### POST Refresh Token
-
-Actualiza el token de acceso utilizando el `refresh_token`. Valida el token de actualización almacenado en las cookies y devuelve nuevos tokens de acceso y actualización.
-
-```http
-  POST /api/auth/token/refresh/
-```
-
-#### Respuesta esperada
-
-Se espera el siguiente mensaje, junto al código HTTP 200 OK.
-
-```json
-{
-  "message": "Access Token and Refresh Token successfully refreshed"
-}
-```
-
-| Cookie          | Type       | Secure | Description                            |
-| :-------------- | :--------- | :----- | :------------------------------------- |
-| `refresh_token` | `HTTPOnly` | `True` | Token para renovar acceso actualizado. |
-| `access_token`  | `HTTPOnly` | `True` | Token de acceso temporal.              |
-
-#### POST Verify Token
-
-Verifica la validez de un token proporcionado. Si el token es válido, se devuelve el ID del usuario asociado; si no lo es o ha expirado, se devuelve un error.
-
-```http
-  POST /api/auth/token/refresh/
-```
-
-| Field        | Type     | Description                           |
-| :----------- | :------- | :------------------------------------ |
-| `token`      | `string` | **Required**. Access Token a validar. |
-
-#### Ejemplo
-
-```json
-{
-  {
-    "token": "some-token"
-  }
-}
-```
-**NOTA:** En lugar de `some-token`, proporcionar el `access_token` que se encuentra en las cookies.
-
-#### Respuesta esperada
-
-Se espera el siguiente mensaje, junto al código HTTP 200 OK.
-
-```json
-{
-  "message": "Token is valid",
-  "user_id": 1
-}
-```
-
-| Cookie          | Type       | Secure | Description                           |
-| :-------------- | :--------- | :----- | :------------------------------------ |
-| `refresh_token` | `HTTPOnly` | `True` | Token para renovar acceso.            |
-| `access_token`  | `HTTPOnly` | `True` | Token de acceso temporal actualizado. |
 
 #### POST Logout
 

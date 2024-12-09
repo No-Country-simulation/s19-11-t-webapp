@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from datetime import timedelta
 from dotenv import load_dotenv
 import pymysql
 
@@ -16,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x9r36asbuin1uwotvrnlg!w^7rjgj1)eq46gy)fp#i!w6sjn7r'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-x9r36asbuin1uwotvrnlg!w^7rjgj1)eq46gy)fp#i!w6sjn7r')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
@@ -36,8 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'authentication',
     'especialidad',
@@ -56,33 +53,26 @@ MIDDLEWARE = [
 
 AUTH_USER_MODEL = 'users.Usuario'
 
+
+# Configuración de CSRF y Sesiones
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_COOKIE_SECURE = True      
+CSRF_COOKIE_SAMESITE = 'Lax'   
+SESSION_COOKIE_AGE = 604800  
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+
+# Configuración de REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'authentication.authentication.CustomAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'ALGORITHM': 'RS256',
-    'SIGNING_KEY': open('keys/private.pem').read(),
-    'VERIFYING_KEY': open('keys/public.pem').read(),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
-
-AUTH_COOKIE = 'access'
-AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 5
-AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24
-AUTH_COOKIE_SECURE = os.environ.get('AUTH_COOKIE_SECURE') == 'True'
-AUTH_COOKIE_HTTP_ONLY = True
-AUTH_COOKIE_PATH = '/'
-AUTH_COOKIE_SAMESITE = 'None'
 
 ROOT_URLCONF = 'user_service.urls'
 
@@ -126,6 +116,11 @@ else:
         }
     }
 
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -164,4 +159,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Donde se recopilan los archivos estáticos
 STATIC_URL = '/static/'
-
