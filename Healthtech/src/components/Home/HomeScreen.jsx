@@ -1,6 +1,7 @@
 import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
 import "./style/homeScreen.css";
 import services from "./utils/servicesData";
+import MedicalRecordsButton from "../medicalRecords/MedicalRecordsButton";
 
 function HomeScreen() {
   return (
@@ -29,6 +30,7 @@ function HomeScreen() {
                 <Button variant="primary" className="btn-appointments me-3">
                   Appointments
                 </Button>
+
                 <div className="btn-container">
                   <Button variant="outline-danger" className="btn-watch-video">
                     <img
@@ -40,6 +42,12 @@ function HomeScreen() {
                   </Button>
                   Watch Video
                 </div>
+
+                <Button variant="outline-danger" className="btn-watch-video">
+                  <i className="bi bi-play-circle"></i> Watch Video
+                </Button>
+                <MedicalRecordsButton />
+
               </div>
             </Col>
 

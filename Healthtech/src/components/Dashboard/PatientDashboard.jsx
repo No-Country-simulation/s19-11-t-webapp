@@ -1,7 +1,71 @@
 import { Container, Row, Col, Button, Card, ListGroup } from "react-bootstrap";
 import "./style/patientDashboard.css";
+import axios from "axios";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 
 function PatientDashboard() {
+  const [ultimasCitas, setUltimasCitas] = useState([]);
+  const [proximasCitas, setProximasCitas] = useState([]);
+
+  // Traer citas segun filtro
+  const getAppointments = async (pacienteId, estado, sort, order, limit = 4) => {
+    try {
+      // Endpoint del servicio
+      const apiUrl = "http://localhost:3000/api/citas";
+
+      // Filtros
+      const params = {
+        pacienteId: pacienteId,
+        estado: estado,
+        sort: sort,
+        order: order,
+        limit: limit,
+      };
+      console.log("paso params", params);
+
+      const response = await axios.get(apiUrl, { params });
+
+      const citas = response.data;
+      console.log("Citas devueltas por el back:", citas);
+
+      return citas;
+    } catch (error) {
+      console.error("Error al obtener las últimas citas realizadas:", error);
+      return [];
+    }
+  };
+
+  // Cancelar una cita
+  const cancelAppointment = async (citaId) => {
+    try {
+      console.log("Va a cancelar cita", citaId);
+      const apiUrl = `http://localhost:3000/api/citas/${citaId}`;
+      const response = await axios.patch(apiUrl, {
+        estado: "cancelada",
+      });
+
+      alert("Appointment canceled successfully!"); // Muestra mensaje de éxito
+      return response.data;
+    } catch (error) {
+      console.error("Error al cancelar la cita:", error);
+      alert("Failed to cancel appointment. Please try again."); // Muestra mensaje de error
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const getCitas = async () => {
+      const pacienteId = 1;
+      let citas = await getAppointments(pacienteId, "agendada", "fecha,hora_inicio", "asc");
+      setProximasCitas(citas);
+      citas = await getAppointments(pacienteId, "realizada", "fecha,hora_inicio", "desc");
+      setUltimasCitas(citas);
+    };
+
+    getCitas();
+  }, []);
+
   return (
     <div className="dashboard-container">
       <Container fluid>
@@ -31,26 +95,22 @@ function PatientDashboard() {
             <Row className="top-bar align-items-center mb-4">
               <Col>
                 <div className="search-bar">
-                  <input
-                    type="text"
-                    className="form-control search-input"
-                    placeholder="Search"
-                  />
+                  <input type="text" className="form-control search-input" placeholder="Search" />
                 </div>
               </Col>
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img
-                    src="https://via.placeholder.com/40"
-                    alt="User"
-                    className="rounded-circle"
-                  />
+                  <img src="https://via.placeholder.com/40" alt="User" className="rounded-circle" />
                   <span className="ms-2">Elisa</span>
                 </div>
               </Col>
             </Row>
-            <Row><h3>Good Morning <span className="text-danger">Elisa Monrroy</span></h3></Row>
+            <Row>
+              <h3>
+                Good Morning <span className="text-danger">Elisa Monrroy</span>
+              </h3>
+            </Row>
 
             {/* Greeting Section */}
             <Row className="greeting-section">
@@ -58,65 +118,102 @@ function PatientDashboard() {
                 <Card className="greeting-card d-flex flex-row">
                   <Card.Body className="d-flex align-items-center flex-column">
                     <div className="greeting-text">
-                      <p>Monday 09 December 2024</p>
+                      <h4>Monday 09 December 2024</h4>
                     </div>
                     <div className="greeting-stats">
                       <Card className="stats-card">
                         <Card.Body>
-                          <h5>Last Appointments</h5>
-                          <h2>10</h2>
+                          <Col md={12}>
+                            <h5>Appointment Reminder</h5>
+                            {proximasCitas.length > 0 ? (
+                              <>
+                                <h4 className="text-danger">{proximasCitas.length > 0 && dayjs(proximasCitas[0].fecha).format("MMMM D, YYYY")}</h4>
+                                <h4 className="text-danger">{dayjs(`2024-01-01T${proximasCitas[0].hora_inicio}`, "HH:mm:ss").format("h:mm A")}</h4>
+                                <Button
+                                  variant="danger"
+                                  onClick={async () => {
+                                    const wasCanceled = await cancelAppointment(proximasCitas[0].id_cita);
+                                    if (wasCanceled) {
+                                      // Actualiza la lista de próximas citas
+                                      const updatedCitas = await getAppointments(1, "agendada", "fecha,hora_inicio", "asc");
+                                      setProximasCitas(updatedCitas);
+                                    }
+                                  }}
+                                >
+                                  Cancel appointment
+                                </Button>
+                              </>
+                            ) : (
+                              <p>No upcoming appointments.</p>
+                            )}
+                          </Col>
                         </Card.Body>
                       </Card>
+                      <Row></Row>
                     </div>
                   </Card.Body>
                   <Card.Body className="image-container">
-                    <img src="./src/assets/img/patientDashboard/patient.png" alt="" className="overflow-image"/>
+                    <img src="./src/assets/img/patientDashboard/patient.png" alt="" className="overflow-image" />
                   </Card.Body>
                 </Card>
                 <Card>
-     {/* Appointment Reminder */}
-     <Col md={12} className="appointment-reminder-section mt-4">
-                <Card>
-                  <Card.Body>
-                    <Row>
-                      <Col md={12}>
-                        <h5>Appointment Reminder</h5>
-                        <h3 className="text-danger">Today 15:00 PM</h3>
-                        <Button variant="danger">Cancel appointment</Button>
-                      </Col>
-                      <Col md={12}>
-                        <h5>Last Appointments</h5>
-                        <ListGroup>
-                          <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <span className="circle-icon bg-danger">DT</span> Dra. Tracy (Weekly Visit)
-                            </div>
-                            <span>9:15 AM</span>
-                          </ListGroup.Item>
-                          <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <span className="circle-icon bg-danger">DT</span> Dra. Tracy (Routine Checkup)
-                            </div>
-                            <span>9:30 AM</span>
-                          </ListGroup.Item>
-                          <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <span className="circle-icon bg-primary">DK</span> Dr. Kim (Report)
-                            </div>
-                            <span>9:50 AM</span>
-                          </ListGroup.Item>
-                          <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                            <div>
-                              <span className="circle-icon bg-primary">DK</span> Dr. Kim (Weekly Visit)
-                            </div>
-                            <span>10:15 AM</span>
-                          </ListGroup.Item>
-                        </ListGroup>
-                      </Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
-              </Col>
+                  {/* Appointment Reminder */}
+                  <Col md={12} className="appointment-reminder-section mt-4">
+                    <Card>
+                      <Card.Body>
+                        <Row className="appointment-section mt-4">
+                          {/* Últimas citas */}
+                          <Col md={6}>
+                            <h5>Last Appointments</h5>
+                            <ListGroup>
+                              {ultimasCitas.length > 0 ? (
+                                ultimasCitas.map((cita, index) => (
+                                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
+                                    <div>
+                                      <span className="circle-icon bg-danger">{cita.medico.initials}</span>
+                                      <span>
+                                        {" "}
+                                        {cita.medico.first_name} {cita.medico.last_name}
+                                      </span>
+                                    </div>
+                                    <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
+                                  </ListGroup.Item>
+                                ))
+                              ) : (
+                                <p>No recent appointments.</p>
+                              )}
+                            </ListGroup>
+                          </Col>
+
+                          {/* Próximas citas */}
+                          <Col md={6}>
+                            <h5>Next Appointments</h5>
+                            <ListGroup>
+                              {proximasCitas.length > 0 ? (
+                                proximasCitas.map((cita, index) => (
+                                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
+                                    <div>
+                                      <span className="circle-icon bg-primary">{cita.medico.initials}</span>
+                                      <span>
+                                        {" "}
+                                        {cita.medico.first_name}
+                                        {cita.medico.last_name}
+                                      </span>
+                                    </div>
+                                    <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
+                                  </ListGroup.Item>
+                                ))
+                              ) : (
+                                <p>No upcoming appointments.</p>
+                              )}
+                            </ListGroup>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </Card>
+                  </Col>
                 </Card>
               </Col>
               <Col md={4}>
