@@ -10,8 +10,41 @@ export const getCitas = async (req, res) => {
 
     const citas = await citasService.getAllCitas({ fecha, estado, pacienteId, medicoId, sort, order, limit });
 
-    res.json(citas);
+    // Traer datos de los médicos y pacientes para cada cita
+    const citasCompletas = await Promise.all(
+      citas.map(async (cita) => {
+        let medico = null;
+        let paciente = null;
+
+        try {
+          // Obtener datos del médico
+          const medicoApiUrl = `http://localhost:8000/api/medicos/${cita.id_medico}`;
+          const medicoResponse = await axios.get(medicoApiUrl);
+          const { usuario, ...restoMedico } = medicoResponse.data; // Desestructura `usuario` y el resto de `medico`
+          usuario.initials = usuario.first_name[0] + usuario.last_name[0];
+          medico = { ...usuario, ...restoMedico }; // Combina ambos objetos en un solo nivel
+        } catch (error) {
+          console.error(`Error al obtener datos del médico para cita ${cita.id}:`, error.message);
+        }
+
+        try {
+          // Obtener datos del paciente
+          const pacienteApiUrl = `http://localhost:8000/api/pacientes/${cita.id_paciente}`;
+          const pacienteResponse = await axios.get(pacienteApiUrl);
+          const { usuario, ...restoPaciente } = pacienteResponse.data; // Desestructura `usuario` y el resto de `paciente`
+          paciente = { ...usuario, ...restoPaciente }; // Combina ambos objetos en un solo nivel
+        } catch (error) {
+          console.error(`Error al obtener datos del paciente para cita ${cita.id}:`, error.message);
+        }
+
+        // Retornar la cita con los datos planos
+        return { ...cita, medico, paciente };
+      })
+    );
+
+    res.json(citasCompletas); // Responde con las citas completas
   } catch (error) {
+    console.error("Error al obtener las citas:", error.message);
     res.status(500).json({ error: error.message });
   }
 };
