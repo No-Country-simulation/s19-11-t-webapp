@@ -42,10 +42,6 @@ function HomeScreen() {
                   </Button>
                   Watch Video
                 </div>
-
-                <Button variant="outline-danger" className="btn-watch-video">
-                  <i className="bi bi-play-circle"></i> Watch Video
-                </Button>
                 <MedicalRecordsButton />
 
               </div>
