@@ -122,7 +122,7 @@ class MedicoViews(APIView):
         }
     )
 
-    def get(self, request, id=0):
+    def get(self, request, pk=0):
         '''
         Obtener una lista de todos los médicos o un solo médico por ID.
         '''
@@ -175,10 +175,10 @@ class MedicoViews(APIView):
 
         return Response({'message': 'Médico creado exitosamente'}, status=status.HTTP_201_CREATED)
 
-    def get(self, request, id=0):
-        if id > 0:
+    def get(self, request, pk=0):
+        if pk > 0:
             try:
-                medico = Medico.objects.get(pk=id)
+                medico = Medico.objects.get(pk=pk)
                 data = MedicoSerializer(medico).data
                 return Response(data, status=status.HTTP_200_OK)
             except Medico.DoesNotExist:
