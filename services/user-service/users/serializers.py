@@ -1,12 +1,32 @@
 from rest_framework import serializers
-from especialidad.models import Especialidad
-from .models import Usuario, Paciente, Medico
+from users.models import Usuario, Medico, Paciente, Especialidad
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['email', 'first_name', 'last_name']
+        fields = ['email', 'first_name', 'last_name', 'telefono', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = Usuario.objects.create_user(
+            email=validated_data['email'],
+            password=validated_data['password'],
+            first_name=validated_data.get('first_name', ''),
+            last_name=validated_data.get('last_name', ''),
+            telefono=validated_data.get('telefono', '')
+        )
+        return user
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.telefono = validated_data.get('telefono', instance.telefono)
+        if 'password' in validated_data:
+            instance.set_password(validated_data['password'])
+        instance.save()
+        return instance
 
 
 class PacienteSerializer(serializers.ModelSerializer):
@@ -85,13 +105,30 @@ class MedicoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Extraer y validar datos de usuario
-        usuario_data = validated_data.pop('usuario')
+        usuario_data = validated_data.pop('id_usuario')
+        
         usuario_serializer = UsuarioSerializer(data=usuario_data)
         if not usuario_serializer.is_valid():
             raise serializers.ValidationError({'usuario': usuario_serializer.errors})
 
         usuario = usuario_serializer.save()
 
-        # Crear el objeto médico
+        # Crear médico
         medico = Medico.objects.create(id_usuario=usuario, **validated_data)
         return medico
+
+    def update(self, instance, validated_data):
+        usuario_data = validated_data.pop('id_usuario')
+        usuario = instance.id_usuario
+
+        instance.especialidad = validated_data.get('especialidad', instance.especialidad)
+        instance.nro_matricula = validated_data.get('nro_matricula', instance.nro_matricula)
+        instance.save()
+
+        usuario.email = usuario_data.get('email', usuario.email)
+        usuario.first_name = usuario_data.get('first_name', usuario.first_name)
+        usuario.last_name = usuario_data.get('last_name', usuario.last_name)
+        usuario.telefono = usuario_data.get('telefono', usuario.telefono)
+        usuario.save()
+
+        return instance

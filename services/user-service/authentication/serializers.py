@@ -6,7 +6,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['email', 'first_name', 'last_name', 'user_type']
+        fields = ['id', 'email', 'first_name', 'last_name', 'user_type']
 
     def get_user_type(self, obj):
         if obj.is_staff:
