@@ -107,25 +107,25 @@ function DoctorDashboard() {
                             <div>
                               <span className="circle-icon bg-danger">SM</span> Stacy Mitchell (Weekly Visit)
                             </div>
-                            <span>9:15 AM</span>
+                            <span className="ms-auto time-badge bg-dan">9:15 AM</span>
                           </ListGroup.Item>
                           <ListGroup.Item className="d-flex align-items-center justify-content-between">
                             <div>
-                              <span className="circle-icon bg-danger">AD</span> Amy Dunham (Routine Checkup)
+                              <span className="circle-icon bg-primary">AD</span> Amy Dunham (Routine Checkup)
                             </div>
-                            <span>9:30 AM</span>
+                            <span className="ms-auto time-badge bg-prim">9:30 AM</span>
                           </ListGroup.Item>
                           <ListGroup.Item className="d-flex align-items-center justify-content-between">
                             <div>
-                              <span className="circle-icon bg-primary">DJ</span> Demi Joan (Report)
+                              <span className="circle-icon bg-info">DJ</span> Demi Joan (Report)
                             </div>
-                            <span>9:50 AM</span>
+                            <span className="ms-auto time-badge bg-inf">9:50 AM</span>
                           </ListGroup.Item>
                           <ListGroup.Item className="d-flex align-items-center justify-content-between">
                             <div>
-                              <span className="circle-icon bg-primary">SM</span> Susan Myers (Weekly Visit)
+                              <span className="circle-icon bg-success">SM</span> Susan Myers (Weekly Visit)
                             </div>
-                            <span>10:15 AM</span>
+                            <span className="ms-auto time-badge bg-succ">10:15 AM</span>
                           </ListGroup.Item>
                         </ListGroup>
                       </Col>

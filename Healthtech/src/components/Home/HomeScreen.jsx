@@ -30,10 +30,24 @@ function HomeScreen() {
                 <Button variant="primary" className="btn-appointments me-3">
                   Appointments
                 </Button>
+
+                <div className="btn-container">
+                  <Button variant="outline-danger" className="btn-watch-video">
+                    <img
+                      src="./src/components/Home/style/assets/play.webp"
+                      alt="icon"
+                      className="button-image"
+                    />
+                    <i className="bi bi-play-circle"></i>
+                  </Button>
+                  Watch Video
+                </div>
+
                 <Button variant="outline-danger" className="btn-watch-video">
                   <i className="bi bi-play-circle"></i> Watch Video
                 </Button>
                 <MedicalRecordsButton />
+
               </div>
             </Col>
 
@@ -63,30 +77,38 @@ function HomeScreen() {
           <Row className="align-items-center bg-white shadow-sm rounded px-3 py-4">
             <Col md={3}>
               <Form.Group controlId="searchName">
-                <Form.Control
-                  type="text"
-                  placeholder="Name"
-                  className="search-input"
-                />
+                <div className="InputContainer">
+                  <Form.Control
+                    type="text"
+                    placeholder="Name"
+                    className="input"
+                  />
+                </div>
               </Form.Group>
             </Col>
             <Col md={3}>
               <Form.Group controlId="searchSpeciality">
-                <Form.Control
-                  type="text"
-                  placeholder="Speciality"
-                  className="search-input"
-                />
+                <div className="InputContainer">
+                  <Form.Control
+                    type="text"
+                    placeholder="Speciality"
+                    className="input"
+                    id="input"
+                  />
+                </div>
               </Form.Group>
             </Col>
             <Col md={3} className="d-flex align-items-center">
               <span className="me-2">Available</span>
-              <Form.Check
-                type="switch"
-                id="availabilitySwitch"
-                className="availability-switch"
-              />
+              <div className="toggle-button-cover">
+                <div id="button-3" className="button r">
+                  <input className="checkbox" type="checkbox" />
+                  <div className="knobs"></div>
+                  <div className="layer"></div>
+                </div>
+              </div>
             </Col>
+
             <Col md={3} className="text-end">
               <Button variant="primary" className="search-button">
                 Search
