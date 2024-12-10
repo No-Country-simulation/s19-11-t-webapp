@@ -65,14 +65,13 @@ class PacienteViews(APIView):
             404: 'No encontrado'
         }
     )
-
-    def get(self, request, id=0):
+    def get(self, request, pk=None):
         '''
         Obtener una lista de todos los pacientes o un solo paciente por ID.
         '''
-        if id > 0:
+        if pk is not None:
             try:
-                paciente = Paciente.objects.get(pk=id)
+                paciente = Paciente.objects.get(pk=pk)
                 data = PacienteSerializer(paciente).data
                 return Response(data, status=status.HTTP_200_OK)
             except Paciente.DoesNotExist:
@@ -81,7 +80,6 @@ class PacienteViews(APIView):
         pacientes = Paciente.objects.all()
         data = PacienteSerializer(pacientes, many=True).data
         return Response(data, status=status.HTTP_200_OK)
-    
 
     @swagger_auto_schema(
         operation_description='Crear un nuevo paciente',
@@ -126,9 +124,9 @@ class MedicoViews(APIView):
         '''
         Obtener una lista de todos los médicos o un solo médico por ID.
         '''
-        if id > 0:
+        if pk > 0:
             try:
-                medico = Medico.objects.get(pk=id)
+                medico = Medico.objects.get(pk=pk)
                 data = MedicoSerializer(medico).data
                 return Response(data, status=status.HTTP_200_OK)
             except Medico.DoesNotExist:
@@ -175,15 +173,3 @@ class MedicoViews(APIView):
 
         return Response({'message': 'Médico creado exitosamente'}, status=status.HTTP_201_CREATED)
 
-    def get(self, request, pk=0):
-        if pk > 0:
-            try:
-                medico = Medico.objects.get(pk=pk)
-                data = MedicoSerializer(medico).data
-                return Response(data, status=status.HTTP_200_OK)
-            except Medico.DoesNotExist:
-                return Response({'error': 'Médico no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-
-        medicos = Medico.objects.all()
-        data = MedicoSerializer(medicos, many=True).data
-        return Response(data, status=status.HTTP_200_OK)
