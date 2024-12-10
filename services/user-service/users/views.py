@@ -22,13 +22,13 @@ class UsuariosViews(APIView):
         }
     )
 
-    def get(self, request, id=0):
+    def get(self, request, pk=0):
         '''
         Obtener una lista de todos los usuarios o un solo usuario por ID.
         '''
-        if id > 0:
+        if pk > 0:
             try:
-                usuario = Usuario.objects.get(pk=id)
+                usuario = Usuario.objects.get(pk=pk)
                 data = UsuarioSerializer(usuario).data
                 return Response(data, status=status.HTTP_200_OK)
             except Usuario.DoesNotExist:
