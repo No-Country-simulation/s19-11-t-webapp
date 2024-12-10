@@ -1,11 +1,11 @@
 .dashboard-container {
-    background-color: #007bff;
+    background-color: #0B94CA;
     height: 100vh;
     color: white;
   }
   
   .sidebar {
-    background-color: #0056b3;
+    background-color: #0B94CA;
     height: 100vh;
     padding: 1rem 0;
   }
@@ -18,42 +18,155 @@
   }
   
   .main-content {
-    padding: 2rem;
+    padding: 1.5rem;
   }
   
   .search-bar .search-input {
     border-radius: 30px;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 2rem;
   }
   
   .user-profile img {
     width: 40px;
     height: 40px;
   }
-  
+
+  .greeting-stats {
+    padding: 10px; 
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important; 
+    gap: 20px;
+    max-width: 500px;
+  }
+
+  .greeting-stats h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+
   .greeting-card {
-    background: linear-gradient(90deg, #0056b3, #007bff);
+    background: linear-gradient(400deg, #0B94CA, #2FDFFF, #0B2354);
     color: white;
     border: none;
+    position: relative;
+    border-radius: 10px; 
+  padding: 20px; 
+  display: flex;
+  flex-direction: column !important;
+  justify-content: space-between; 
+  gap: 20px; 
+  height: 100%; 
+}  
+
+  .greeting-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
   }
-  
+
+  .stats-box {
+    display: flex;
+    gap: 15px; 
+    flex-wrap: wrap;
+    width: 100%; 
+    justify-content: flex-start; 
+  }
+
   .stats-card {
     background: #ffffff;
-    color: #0056b3;
+    color: #0B94CA;
     text-align: center;
+    opacity: 85%;
+    text-align: center;
+  padding: 15px;
+  border-radius: 10px; 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  flex: 1; 
   }
   
-  .patient-list-section .circle-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-  }
+
+.circle-icon {
+  width: 50px; 
+  height: 50px;
+  border-radius: 50%; 
+  display: inline-flex;
+  align-items: center; 
+  justify-content: center; 
+  color: white;
+  font-weight: bold;
+  border: 3px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.1); 
+}
+
+/* Colores circulos */
+.circle-icon.bg-danger {
+  background-color: #E81A2B !important; 
+}
+
+.circle-icon.bg-primary {
+  background-color: #FF4467 !important; 
+}
+
+.circle-icon.bg-info {
+  background-color: #0B94CA !important; 
+}
+
+.circle-icon.bg-success {
+  background-color: #2FDFFF !important; 
+}
+
+.time-badge.bg-dan {
+  background-color: rgba(232, 26, 43, 0.1);
+  color: #E81A2B;
+  padding: 5px 12px; 
+  border-radius: 20px; 
+  font-size: 0.9rem; 
+  font-weight: bold; 
+  text-align: center; 
+  min-width: 70px; 
+  display: inline-block; 
+}
+
+.time-badge.bg-prim {
+  background-color: rgba(255, 68, 103, 0.1);
+  color: #FF4467;
+  padding: 5px 12px; 
+  border-radius: 20px; 
+  font-size: 0.9rem; 
+  font-weight: bold; 
+  text-align: center; 
+  min-width: 70px; 
+  display: inline-block; 
+}
+
+.time-badge.bg-inf {
+  background-color: rgba(11, 148, 202, 0.1);
+  color: #0B94CA;
+  padding: 5px 12px; 
+  border-radius: 20px; 
+  font-size: 0.9rem; 
+  font-weight: bold; 
+  text-align: center; 
+  min-width: 70px; 
+  display: inline-block; 
+}
+
+.time-badge.bg-succ {
+  background-color: rgba(47, 223, 255, 0.1);
+  color: #2FDFFF;
+  padding: 5px 12px; 
+  border-radius: 20px; 
+  font-size: 0.9rem; 
+  font-weight: bold; 
+  text-align: center; 
+  min-width: 70px; 
+  display: inline-block; 
+}
+
   
   .consultation-card {
     background: #ffffff;
@@ -63,6 +176,6 @@
   
   .upcoming-section .card-body {
     background: #ffffff;
-    color: #0056b3;
+
   }
   
