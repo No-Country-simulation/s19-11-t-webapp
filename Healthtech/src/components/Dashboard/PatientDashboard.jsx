@@ -109,15 +109,21 @@ function PatientDashboard() {
                 <Card className="greeting-card d-flex flex-row">
                   <Card.Body className="d-flex align-items-center flex-column">
                     <div className="greeting-text">
-                      <p>Monday 09 December 2024</p>
+                      <h4>Monday 09 December 2024</h4>
                     </div>
                     <div className="greeting-stats">
                       <Card className="stats-card">
                         <Card.Body>
-                          <h5>Last Appointments</h5>
-                          <h2>10</h2>
+                          <Col md={12}>
+                            <h5>Appointment Reminder</h5>
+                            <h3 className="text-danger">Today 15:00 PM</h3>
+                            <Button variant="danger" onClick={() => cancelAppointment(5)}>
+                              Cancel appointment
+                            </Button>
+                          </Col>
                         </Card.Body>
                       </Card>
+                      <Row></Row>
                     </div>
                   </Card.Body>
                   <Card.Body className="image-container">
@@ -129,96 +135,57 @@ function PatientDashboard() {
                   <Col md={12} className="appointment-reminder-section mt-4">
                     <Card>
                       <Card.Body>
-                        <Row>
-                          <Col md={12}>
-                            <h5>Appointment Reminder</h5>
-                            <h3 className="text-danger">Today 15:00 PM</h3>
-                            <Button variant="danger" onClick={() => cancelAppointment(5)}>
-                              Cancel appointment
-                            </Button>
-                          </Col>
-                        </Row>
-
                         <Row className="appointment-section mt-4">
                           {/* Últimas citas */}
                           <Col md={6}>
-                            <Card>
-                              <Card.Body>
-                                <h5>Last Appointments</h5>
-                                <ListGroup>
-                                  {ultimasCitas.length > 0 ? (
-                                    ultimasCitas.map((cita, index) => (
-                                      <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
-                                        <div>
-                                          <span className="circle-icon bg-danger">{cita.id_medico}</span> {cita.tipo} ({cita.detalle})
-                                        </div>
-
-                                        <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
-                                        <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
-                                      </ListGroup.Item>
-                                    ))
-                                  ) : (
-                                    <p>No recent appointments.</p>
-                                  )}
-                                </ListGroup>
-                              </Card.Body>
-                            </Card>
+                            <h5>Last Appointments</h5>
+                            <ListGroup>
+                              {ultimasCitas.length > 0 ? (
+                                ultimasCitas.map((cita, index) => (
+                                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
+                                    <div>
+                                      <span className="circle-icon bg-danger">{cita.medico.initials}</span>
+                                      <span>
+                                        {" "}
+                                        {cita.medico.first_name}
+                                        {cita.medico.last_name}
+                                      </span>
+                                    </div>
+                                    <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
+                                  </ListGroup.Item>
+                                ))
+                              ) : (
+                                <p>No recent appointments.</p>
+                              )}
+                            </ListGroup>
                           </Col>
 
                           {/* Próximas citas */}
                           <Col md={6}>
-                            <Card>
-                              <Card.Body>
-                                <h5>Next Appointments</h5>
-                                <ListGroup>
-                                  {proximasCitas.length > 0 ? (
-                                    proximasCitas.map((cita, index) => (
-                                      <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
-                                        <div>
-                                          <span className="circle-icon bg-primary">{cita.id_medico}</span> {cita.detalle} ({cita.tipo})
-                                        </div>
-                                        <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
-                                        <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
-                                      </ListGroup.Item>
-                                    ))
-                                  ) : (
-                                    <p>No upcoming appointments.</p>
-                                  )}
-                                </ListGroup>
-                              </Card.Body>
-                            </Card>
+                            <h5>Next Appointments</h5>
+                            <ListGroup>
+                              {proximasCitas.length > 0 ? (
+                                proximasCitas.map((cita, index) => (
+                                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
+                                    <div>
+                                      <span className="circle-icon bg-primary">{cita.medico.initials}</span>
+                                      <span>
+                                        {" "}
+                                        {cita.medico.first_name}
+                                        {cita.medico.last_name}
+                                      </span>
+                                    </div>
+                                    <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
+                                  </ListGroup.Item>
+                                ))
+                              ) : (
+                                <p>No upcoming appointments.</p>
+                              )}
+                            </ListGroup>
                           </Col>
                         </Row>
-
-                        <Col md={12}>
-                          <h5>Last Appointments</h5>
-                          <ListGroup>
-                            <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                              <div>
-                                <span className="circle-icon bg-danger">DT</span> Dra. Tracy (Weekly Visit)
-                              </div>
-                              <span>9:15 AM</span>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                              <div>
-                                <span className="circle-icon bg-danger">DT</span> Dra. Tracy (Routine Checkup)
-                              </div>
-                              <span>9:30 AM</span>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                              <div>
-                                <span className="circle-icon bg-primary">DK</span> Dr. Kim (Report)
-                              </div>
-                              <span>9:50 AM</span>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="d-flex align-items-center justify-content-between">
-                              <div>
-                                <span className="circle-icon bg-primary">DK</span> Dr. Kim (Weekly Visit)
-                              </div>
-                              <span>10:15 AM</span>
-                            </ListGroup.Item>
-                          </ListGroup>
-                        </Col>
                       </Card.Body>
                     </Card>
                   </Col>
