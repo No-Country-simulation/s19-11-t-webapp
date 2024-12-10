@@ -38,11 +38,20 @@ function PatientDashboard() {
 
   // Cancelar una cita
   const cancelAppointment = async (citaId) => {
-    const apiUrl = `http://localhost:3000/api/citas/${citaId}`;
-    const response = axios.patch(apiUrl, {
-      estado: "cancelada",
-    });
-    return response.data;
+    try {
+      console.log("Va a cancelar cita", citaId);
+      const apiUrl = `http://localhost:3000/api/citas/${citaId}`;
+      const response = await axios.patch(apiUrl, {
+        estado: "cancelada",
+      });
+
+      alert("Appointment canceled successfully!"); // Muestra mensaje de éxito
+      return response.data;
+    } catch (error) {
+      console.error("Error al cancelar la cita:", error);
+      alert("Failed to cancel appointment. Please try again."); // Muestra mensaje de error
+      return null;
+    }
   };
 
   useEffect(() => {
@@ -116,10 +125,27 @@ function PatientDashboard() {
                         <Card.Body>
                           <Col md={12}>
                             <h5>Appointment Reminder</h5>
-                            <h3 className="text-danger">Today 15:00 PM</h3>
-                            <Button variant="danger" onClick={() => cancelAppointment(5)}>
-                              Cancel appointment
-                            </Button>
+                            {proximasCitas.length > 0 ? (
+                              <>
+                                <h4 className="text-danger">{proximasCitas.length > 0 && dayjs(proximasCitas[0].fecha).format("MMMM D, YYYY")}</h4>
+                                <h4 className="text-danger">{dayjs(`2024-01-01T${proximasCitas[0].hora_inicio}`, "HH:mm:ss").format("h:mm A")}</h4>
+                                <Button
+                                  variant="danger"
+                                  onClick={async () => {
+                                    const wasCanceled = await cancelAppointment(proximasCitas[0].id_cita);
+                                    if (wasCanceled) {
+                                      // Actualiza la lista de próximas citas
+                                      const updatedCitas = await getAppointments(1, "agendada", "fecha,hora_inicio", "asc");
+                                      setProximasCitas(updatedCitas);
+                                    }
+                                  }}
+                                >
+                                  Cancel appointment
+                                </Button>
+                              </>
+                            ) : (
+                              <p>No upcoming appointments.</p>
+                            )}
                           </Col>
                         </Card.Body>
                       </Card>
@@ -147,8 +173,7 @@ function PatientDashboard() {
                                       <span className="circle-icon bg-danger">{cita.medico.initials}</span>
                                       <span>
                                         {" "}
-                                        {cita.medico.first_name}
-                                        {cita.medico.last_name}
+                                        {cita.medico.first_name} {cita.medico.last_name}
                                       </span>
                                     </div>
                                     <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
