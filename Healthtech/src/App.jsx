@@ -6,15 +6,16 @@ import PatientDashboard from "./components/Dashboard/PatientDashboard";
 import DoctorDashboard from "./components/Dashboard/DoctorDashboard";
 import AuthModal from "./components/AuthModal/AuthModal";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
 
 function App() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState(null); 
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("login");
 
   const handleShowModal = (mode) => {
-    setModalMode(mode); 
+    setModalMode(mode);
     setShowModal(true);
   };
 
@@ -22,43 +23,66 @@ function App() {
     setShowModal(false);
   };
 
-  const handleLogin = () => {
-    setIsLoggedIn(true); 
-    handleCloseModal(); 
+  const handleLogin = (user, navigate) => {
+    setIsLoggedIn(true);
+    setUserInfo(user); 
+    setShowModal(false);
+
+
+    if (user.role === "doctor" || user.role === "admin") {
+      navigate("/doctor-dashboard");
+    } else if (user.role === "patient") {
+      navigate("/dashboard");
+    } else {
+      console.error("Unexpected role:", user.role);
+    }
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false); 
-    
+  const handleLogout = (navigate) => {
+    setIsLoggedIn(false);
+    setUserInfo(null); 
+    navigate("/"); 
   };
-
 
   return (
     <Router>
-    <div className="App">
-    <CustomNavbar
+      <div className="App">
+        <CustomNavbar
           isLoggedIn={isLoggedIn}
-          handleLogout={handleLogout}
+          handleLogout={(navigate) => handleLogout(navigate)}
           onShowModal={handleShowModal}
         />
 
-      <Routes>
+        <Routes>
           <Route path="/" element={<HomeScreen />} />
-           <Route path="/dashboard" element={<PatientDashboard />} />
-          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+          <Route
+            path="/dashboard"
+            element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <PatientDashboard userInfo={userInfo} />
+            </ProtectedRoute>
+            } 
+          />
+          <Route
+            path="/doctor-dashboard"
+            element={
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
+                <DoctorDashboard userInfo={userInfo} />
+            </ProtectedRoute>} 
+          />
         </Routes>
-      <Footer/>
-      {/* Auth Modal */}
-      <AuthModal
+
+        <Footer />
+
+        <AuthModal
           show={showModal}
           handleClose={handleCloseModal}
           mode={modalMode}
-          onLogin={handleLogin}
+          onLogin={(user, navigate) => handleLogin(user, navigate)} 
         />
-
-    </div>
+      </div>
     </Router>
-  )
+  );
 }
 
 export default App
