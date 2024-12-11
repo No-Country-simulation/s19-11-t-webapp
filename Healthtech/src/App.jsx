@@ -1,16 +1,17 @@
 import { useState } from "react";
-import CustomNavbar from "./components/Navbar/Navbar"
-import HomeScreen from "./components/Home/HomeScreen"
-import Footer from "./components/Footer/Footer"
+import CustomNavbar from "./components/Navbar/Navbar";
+import HomeScreen from "./components/Home/HomeScreen";
+import Footer from "./components/Footer/Footer";
 import PatientDashboard from "./components/Dashboard/PatientDashboard";
 import DoctorDashboard from "./components/Dashboard/DoctorDashboard";
 import AuthModal from "./components/AuthModal/AuthModal";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
+import MedicalRecordsPage from "./components/medicalRecords/MedicalRecordPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState(null); 
+  const [userInfo, setUserInfo] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("login");
 
@@ -25,9 +26,8 @@ function App() {
 
   const handleLogin = (user, navigate) => {
     setIsLoggedIn(true);
-    setUserInfo(user); 
+    setUserInfo(user);
     setShowModal(false);
-
 
     if (user.role === "doctor" || user.role === "admin") {
       navigate("/doctor-dashboard");
@@ -40,8 +40,8 @@ function App() {
 
   const handleLogout = (navigate) => {
     setIsLoggedIn(false);
-    setUserInfo(null); 
-    navigate("/"); 
+    setUserInfo(null);
+    navigate("/");
   };
 
   return (
@@ -58,17 +58,22 @@ function App() {
           <Route
             path="/dashboard"
             element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <PatientDashboard userInfo={userInfo} />
-            </ProtectedRoute>
-            } 
+              </ProtectedRoute>
+            }
           />
+
+          <Route path="/medical-records" element={<MedicalRecordsPage />} />
+
+          {}
           <Route
             path="/doctor-dashboard"
             element={
               <ProtectedRoute isLoggedIn={isLoggedIn}>
                 <DoctorDashboard userInfo={userInfo} />
-            </ProtectedRoute>} 
+              </ProtectedRoute>
+            }
           />
         </Routes>
 
@@ -78,11 +83,11 @@ function App() {
           show={showModal}
           handleClose={handleCloseModal}
           mode={modalMode}
-          onLogin={(user, navigate) => handleLogin(user, navigate)} 
+          onLogin={(user, navigate) => handleLogin(user, navigate)}
         />
       </div>
     </Router>
   );
 }
 
-export default App
+export default App;
