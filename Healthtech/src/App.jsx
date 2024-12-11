@@ -31,7 +31,7 @@ function App() {
 
     if (user.role === "doctor" || user.role === "admin") {
       navigate("/doctor-dashboard");
-    } else if (user.role === "patient") {
+    } else if (user.role === "patient" || user.role === "moderator") {
       navigate("/dashboard");
     } else {
       console.error("Unexpected role:", user.role);

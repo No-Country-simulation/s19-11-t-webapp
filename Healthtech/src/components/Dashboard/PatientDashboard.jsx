@@ -101,14 +101,14 @@ function PatientDashboard({ userInfo }) {
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img src="https://via.placeholder.com/40" alt="User" className="rounded-circle" />
-                  <span className="ms-2">`{userInfo ? userInfo.firstName : null }`</span>
+                  <img   src={userInfo?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  <span className="ms-2">{userInfo ? userInfo.firstName : 'none' }</span>
                 </div>
               </Col>
             </Row>
             <Row>
               <h3>
-                Good Morning <span className="text-danger">`{userInfo ? userInfo.firstName + " " + userInfo.lastName : null}`</span>
+                Good Morning <span className="text-danger">{userInfo ? userInfo.firstName + ' '  + userInfo.lastName : null}</span>
               </h3>
             </Row>
 
