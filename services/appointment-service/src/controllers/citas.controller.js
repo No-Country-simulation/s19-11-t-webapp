@@ -24,7 +24,7 @@ export const getCitas = async (req, res) => {
           usuario.initials = usuario.first_name[0] + usuario.last_name[0];
           medico = { ...usuario, ...restoMedico }; // Combina ambos objetos en un solo nivel
         } catch (error) {
-          console.error(`Error al obtener datos del médico para cita ${cita.id}:`, error.message);
+          console.error(`Error al obtener datos del médico para cita ${cita.id_cita}:`, error.message);
         }
 
         try {
@@ -32,9 +32,10 @@ export const getCitas = async (req, res) => {
           const pacienteApiUrl = `http://localhost:8000/api/pacientes/${cita.id_paciente}`;
           const pacienteResponse = await axios.get(pacienteApiUrl);
           const { usuario, ...restoPaciente } = pacienteResponse.data; // Desestructura `usuario` y el resto de `paciente`
+          usuario.initials = usuario.first_name[0] + usuario.last_name[0];
           paciente = { ...usuario, ...restoPaciente }; // Combina ambos objetos en un solo nivel
         } catch (error) {
-          console.error(`Error al obtener datos del paciente para cita ${cita.id}:`, error.message);
+          console.error(`Error al obtener datos del paciente para cita ${cita.id_cita}:`, error.message);
         }
 
         // Retornar la cita con los datos planos
