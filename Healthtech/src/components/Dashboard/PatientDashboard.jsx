@@ -45,11 +45,11 @@ function PatientDashboard({ userInfo }) {
         estado: "cancelada",
       });
 
-      alert("Appointment canceled successfully!"); 
+      alert("Appointment canceled successfully!");
       return response.data;
     } catch (error) {
       console.error("Error al cancelar la cita:", error);
-      alert("Failed to cancel appointment. Please try again."); 
+      alert("Failed to cancel appointment. Please try again.");
       return null;
     }
   };
@@ -101,14 +101,14 @@ function PatientDashboard({ userInfo }) {
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img   src={userInfo?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
-                  <span className="ms-2">{userInfo ? userInfo.firstName : 'none' }</span>
+                  <img src={userInfo?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  <span className="ms-2">{userInfo ? userInfo.firstName : "none"}</span>
                 </div>
               </Col>
             </Row>
             <Row>
               <h3>
-                Good Morning <span className="text-danger">{userInfo ? userInfo.firstName + ' '  + userInfo.lastName : null}</span>
+                Good Morning <span className="text-danger">{userInfo ? userInfo.firstName + " " + userInfo.lastName : null}</span>
               </h3>
             </Row>
 
@@ -124,11 +124,14 @@ function PatientDashboard({ userInfo }) {
                       <Card className="stats-card">
                         <Card.Body>
                           <Col md={12}>
-                            <h5>Appointment Reminder</h5>
+                            <h4 className="text-danger">Appointment Reminder</h4>
                             {proximasCitas.length > 0 ? (
                               <>
-                                <h4 className="text-danger">{proximasCitas.length > 0 && dayjs(proximasCitas[0].fecha).format("MMMM D, YYYY")}</h4>
-                                <h4 className="text-danger">{dayjs(`2024-01-01T${proximasCitas[0].hora_inicio}`, "HH:mm:ss").format("h:mm A")}</h4>
+                                <h4>
+                                  {proximasCitas[0].medico.first_name} {proximasCitas[0].medico.last_name}
+                                </h4>
+                                <h5>{dayjs(proximasCitas[0].fecha).format("MMMM D, YYYY")}</h5>
+                                <h5>{dayjs(`2024-01-01T${proximasCitas[0].hora_inicio}`, "HH:mm:ss").format("h:mm A")}</h5>
                                 <Button
                                   variant="danger"
                                   onClick={async () => {
@@ -169,15 +172,18 @@ function PatientDashboard({ userInfo }) {
                               {ultimasCitas.length > 0 ? (
                                 ultimasCitas.map((cita, index) => (
                                   <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
-                                    <div>
-                                      <span className="circle-icon bg-danger">{cita.medico.initials}</span>
-                                      <span>
-                                        {" "}
-                                        {cita.medico.first_name} {cita.medico.last_name}
-                                      </span>
+                                    <div className="d-flex align-items-center gap-3">
+                                      <span className="circle-icon bg-info">{cita.medico.initials}</span>
+                                      <div>
+                                        <p className="mb-0">
+                                          {cita.medico.first_name} {cita.medico.last_name}
+                                        </p>
+                                      </div>
                                     </div>
-                                    <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
-                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
+                                    <span className="small">{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                    <span className={`time-container ms-auto schedule-time txt-info bg-light-info`}>
+                                      {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
+                                    </span>
                                   </ListGroup.Item>
                                 ))
                               ) : (
@@ -193,7 +199,7 @@ function PatientDashboard({ userInfo }) {
                               {proximasCitas.length > 0 ? (
                                 proximasCitas.map((cita, index) => (
                                   <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
-                                    <div>
+                                    {/* <div>
                                       <span className="circle-icon bg-primary">{cita.medico.initials}</span>
                                       <span>
                                         {" "}
@@ -202,7 +208,20 @@ function PatientDashboard({ userInfo }) {
                                       </span>
                                     </div>
                                     <span>{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
-                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span>
+                                    <span>{dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}</span> */}
+
+                                    <div className="d-flex align-items-center gap-3">
+                                      <span className="circle-icon bg-primary">{cita.medico.initials}</span>
+                                      <div>
+                                        <p className="mb-0">
+                                          {cita.medico.first_name} {cita.medico.last_name}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <span className="small">{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                    <span className={`time-container ms-auto schedule-time txt-primary bg-light-primary`}>
+                                      {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
+                                    </span>
                                   </ListGroup.Item>
                                 ))
                               ) : (
