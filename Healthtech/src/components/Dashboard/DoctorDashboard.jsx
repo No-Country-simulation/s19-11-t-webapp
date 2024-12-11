@@ -10,7 +10,6 @@ import dayjs from "dayjs";
 function DoctorDashboard({ userInfo }) {
   console.log("userInfo", userInfo);
   const [doctors, setDoctors] = useState([]);
-  const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [citas, setCitas] = useState([]);
 
@@ -51,11 +50,9 @@ function DoctorDashboard({ userInfo }) {
     const loadData = async () => {
       try {
         const doctorsData = await fetchDoctors();
-        const patientsData = await fetchPatients();
         setDoctors(doctorsData);
-        setPatients(patientsData.slice(0, 8));
 
-        let citas = await getAppointments(1, "agendada", "fecha,hora_inicio", "asc");
+        let citas = await getAppointments(medicoId, "agendada", "fecha,hora_inicio", "asc");
         setCitas(citas);
       } catch (error) {
         console.error("Error loading data:", error);
@@ -125,7 +122,7 @@ function DoctorDashboard({ userInfo }) {
                       <p>Visits for Today</p>
                     </div>
                     <div className="greeting-stats">
-                      <h1>{doctors.reduce((sum, doc) => sum + doc.visitsToday, 0)}</h1>
+                      <h1>{citas.length}</h1>
                     </div>
                     <div>
                       <MedicalRecordsButton />
