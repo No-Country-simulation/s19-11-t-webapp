@@ -4,7 +4,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-function PatientDashboard() {
+function PatientDashboard({ userInfo }) {
   const [ultimasCitas, setUltimasCitas] = useState([]);
   const [proximasCitas, setProximasCitas] = useState([]);
 
@@ -45,11 +45,11 @@ function PatientDashboard() {
         estado: "cancelada",
       });
 
-      alert("Appointment canceled successfully!"); // Muestra mensaje de éxito
+      alert("Appointment canceled successfully!"); 
       return response.data;
     } catch (error) {
       console.error("Error al cancelar la cita:", error);
-      alert("Failed to cancel appointment. Please try again."); // Muestra mensaje de error
+      alert("Failed to cancel appointment. Please try again."); 
       return null;
     }
   };
@@ -102,13 +102,13 @@ function PatientDashboard() {
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
                   <img src="https://via.placeholder.com/40" alt="User" className="rounded-circle" />
-                  <span className="ms-2">Elisa</span>
+                  <span className="ms-2">`{userInfo ? userInfo.firstName : null }`</span>
                 </div>
               </Col>
             </Row>
             <Row>
               <h3>
-                Good Morning <span className="text-danger">Elisa Monrroy</span>
+                Good Morning <span className="text-danger">`{userInfo ? userInfo.firstName + " " + userInfo.lastName : null}`</span>
               </h3>
             </Row>
 

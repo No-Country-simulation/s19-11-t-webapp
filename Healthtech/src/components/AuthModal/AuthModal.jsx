@@ -1,64 +1,82 @@
 import { useState } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+const API_BASE_URL = "https://dummyjson.com";
 
 function AuthModal({ show, handleClose, mode, onLogin }) {
-  const navigate = useNavigate();
   const isLogin = mode === "login";
-
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    if (!email) {
-      setError("Email is required."); // Validation for empty email
+  const navigate = useNavigate(); 
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Both email and password are required.");
       return;
     }
+  
+    try {
+      const loginResponse = await axios.post(
+        `${API_BASE_URL}/auth/login`,
+        {
+          username: email,
+          password: password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+  
+      const { accessToken } = loginResponse.data;
+  
 
-    handleClose(); // Close the modal
-
-    // Navigate based on email domain
-    if (email.endsWith("@doctor.com")) {
-      navigate("/doctor-dashboard");
-    } else {
-      navigate("/dashboard");
+      const userResponse = await axios.get(`${API_BASE_URL}/user/me`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+  
+      const user = userResponse.data;
+  
+      if (!user.role) {
+        throw new Error("User role not found.");
+      }
+  
+      onLogin(user, navigate); 
+      handleClose();
+    } catch (error) {
+      setError("Invalid email or password. Please try again.");
+      console.error("Login error:", error);
     }
-
-    onLogin(); // Trigger login state change in App
   };
 
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title className="text-center w-100 text-danger fw-bold">
-          {isLogin ? "Log In" : "Register"}
-        </Modal.Title>
+        <Modal.Title>{isLogin ? "Log In" : "Register"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           {error && <Alert variant="danger">{error}</Alert>}
-          <Form.Group controlId="email" className="mb-3">
+          <Form.Group className="mb-3">
             <Form.Control
               type="email"
               placeholder="E-mail"
               value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setError(""); // Clear error on input
-              }}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
-          <Form.Group controlId="password" className="mb-3">
+          <Form.Group className="mb-3">
             <Form.Control
               type="password"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </Form.Group>
-          <Button
-            variant="primary"
-            className="w-100"
-            onClick={handleLogin}
-          >
+          <Button variant="primary" onClick={handleLogin} className="w-100">
             {isLogin ? "Log In" : "Sign Up"}
           </Button>
         </Form>

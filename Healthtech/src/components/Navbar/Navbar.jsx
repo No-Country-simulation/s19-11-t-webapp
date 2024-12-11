@@ -7,8 +7,7 @@ function CustomNavbar({ isLoggedIn, handleLogout, onShowModal }) {
   const navigate = useNavigate(); 
 
   const logoutAndNavigate = () => {
-    handleLogout(); 
-    navigate("/"); 
+    handleLogout(navigate); 
   };
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm">
