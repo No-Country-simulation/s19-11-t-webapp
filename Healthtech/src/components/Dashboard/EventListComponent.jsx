@@ -1,4 +1,5 @@
 import { ListGroup } from "react-bootstrap";
+import PropTypes from "prop-types";
 import "./style/eventList.css"; 
 
 const EventList = ({ title, events, onViewAll }) => {
@@ -35,6 +36,20 @@ const EventList = ({ title, events, onViewAll }) => {
       </ListGroup>
     </div>
   );
+};
+
+EventList.propTypes = {
+  title: PropTypes.string.isRequired,
+  events: PropTypes.arrayOf(
+    PropTypes.shape({
+      iconColor: PropTypes.string.isRequired,
+      iconText: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      date: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onViewAll: PropTypes.func.isRequired,
 };
 
 export default EventList;

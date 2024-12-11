@@ -4,11 +4,20 @@ import { fetchDoctors, fetchPatients } from "../../api_services/api";
 import "./style/doctorDashboard.css";
 import Calendar from "./calendarComponent";
 import MedicalRecordsButton from "../medicalRecords/MedicalRecordsButton";
+import useStore from "../../useStore";  // Importa la tienda Zustand
+import PropTypes from "prop-types";
 
-function DoctorDashboard({ userInfo }) {
+function DoctorDashboard({ user }) {
   const [doctors, setDoctors] = useState([]);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const clearUser = useStore((state) => state.clearUser);  // Obtén la función clearUser de la tienda Zustand
+
+  const handleLogout = () => {
+    clearUser();
+    // Redirigir al usuario a la página de inicio después de cerrar sesión
+    window.location.href = "/";
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,7 +50,7 @@ function DoctorDashboard({ userInfo }) {
 
           <Col md={2} className="sidebar d-flex flex-column">
             <Button variant="link" className="sidebar-icon">
-              <i className="bi bi-grid"></i>
+              <i className="bi bi-house-door"></i>
             </Button>
             <Button variant="link" className="sidebar-icon">
               <i className="bi bi-calendar"></i>
@@ -53,7 +62,7 @@ function DoctorDashboard({ userInfo }) {
               <i className="bi bi-gear"></i>
             </Button>
             <Button variant="link" className="sidebar-icon">
-              <i className="bi bi-box-arrow-right"></i>
+              <i className="bi bi-box-arrow-right" onClick={handleLogout}></i>
             </Button>
           </Col>
 
@@ -74,16 +83,16 @@ function DoctorDashboard({ userInfo }) {
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
                   <img
-                      src={userInfo?.image || "https://via.placeholder.com/40"}
+                      src={"https://via.placeholder.com/40"}
                     alt="User"
                     className="rounded-circle"
                   />
-                  <span className="ms-2">`Dr. {userInfo ? userInfo.firstName : 'none'}`</span>
+                  <span className="ms-2">Dr. {user ? user.first_name : 'none'}</span>
                 </div>
               </Col>
             </Row>
 
-            <h3 className="text-black">Good Morning <span className="text-danger">`Dr. {userInfo ? userInfo.firstName + ' ' + userInfo.lastName : 'none'}`</span></h3>
+            <h3 className="text-black">Good Morning <span className="text-danger">Dr. {user ? user.first_name + ' ' + user.last_name : 'none'}</span></h3>
 
 
             <Row className="greeting-section">
@@ -174,5 +183,14 @@ function DoctorDashboard({ userInfo }) {
     </div>
   );
 }
+
+DoctorDashboard.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    first_name: PropTypes.string.isRequired,
+    last_name: PropTypes.string.isRequired,
+    user_type: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default DoctorDashboard;

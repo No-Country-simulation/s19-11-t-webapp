@@ -3,8 +3,9 @@ import "./style/patientDashboard.css";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-function PatientDashboard({ userInfo }) {
+function PatientDashboard({ user }) {
   const [ultimasCitas, setUltimasCitas] = useState([]);
   const [proximasCitas, setProximasCitas] = useState([]);
 
@@ -55,16 +56,14 @@ function PatientDashboard({ userInfo }) {
   };
 
   useEffect(() => {
-    const getCitas = async () => {
-      const pacienteId = 1;
-      let citas = await getAppointments(pacienteId, "agendada", "fecha,hora_inicio", "asc");
-      setProximasCitas(citas);
-      citas = await getAppointments(pacienteId, "realizada", "fecha,hora_inicio", "desc");
-      setUltimasCitas(citas);
-    };
+    if (user) {
+      // Obtener las últimas citas realizadas
+      getAppointments(user.id, "realizada", "fecha", "desc").then(setUltimasCitas);
 
-    getCitas();
-  }, []);
+      // Obtener las próximas citas
+      getAppointments(user.id, "pendiente", "fecha", "asc").then(setProximasCitas);
+    }
+  }, [user]);
 
   return (
     <div className="dashboard-container">
@@ -101,14 +100,14 @@ function PatientDashboard({ userInfo }) {
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img   src={userInfo?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
-                  <span className="ms-2">{userInfo ? userInfo.firstName : 'none' }</span>
+                  <img   src={"https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  <span className="ms-2">{user ? user.first_name : 'none' }</span>
                 </div>
               </Col>
             </Row>
             <Row>
               <h3>
-                Good Morning <span className="text-danger">{userInfo ? userInfo.firstName + ' '  + userInfo.lastName : null}</span>
+                Good Morning <span className="text-danger">{user ? user.first_name + ' '  + user.last_name : null}</span>
               </h3>
             </Row>
 
@@ -239,5 +238,14 @@ function PatientDashboard({ userInfo }) {
     </div>
   );
 }
+
+PatientDashboard.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    first_name: PropTypes.string.isRequired,
+    last_name: PropTypes.string.isRequired,
+    user_type: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default PatientDashboard;

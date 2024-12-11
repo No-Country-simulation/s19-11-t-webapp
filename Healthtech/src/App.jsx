@@ -1,18 +1,19 @@
 import { useState } from "react";
-import CustomNavbar from "./components/Navbar/Navbar"
-import HomeScreen from "./components/Home/HomeScreen"
-import Footer from "./components/Footer/Footer"
+import CustomNavbar from "./components/Navbar/Navbar";
+import HomeScreen from "./components/Home/HomeScreen";
+import Footer from "./components/Footer/Footer";
 import PatientDashboard from "./components/Dashboard/PatientDashboard";
 import DoctorDashboard from "./components/Dashboard/DoctorDashboard";
 import AuthModal from "./components/AuthModal/AuthModal";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
+import useStore from "./useStore";  // Importa la tienda Zustand
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState(null); 
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("login");
+  const user = useStore((state) => state.user);  // Obtén el usuario de la tienda Zustand
+  const clearUser = useStore((state) => state.clearUser);  // Obtén la función clearUser de la tienda Zustand
 
   const handleShowModal = (mode) => {
     setModalMode(mode);
@@ -24,65 +25,34 @@ function App() {
   };
 
   const handleLogin = (user, navigate) => {
-    setIsLoggedIn(true);
-    setUserInfo(user); 
     setShowModal(false);
 
-
-    if (user.role === "doctor" || user.role === "admin") {
+    if (user.user_type === "Medico" || user.user_type === "admin") {
       navigate("/doctor-dashboard");
-    } else if (user.role === "patient" || user.role === "moderator") {
+    } else if (user.user_type === "Paciente" || user.user_type === "moderator") {
       navigate("/dashboard");
     } else {
-      console.error("Unexpected role:", user.role);
+      console.error("Unexpected user_type:", user.user_type);
     }
   };
 
   const handleLogout = (navigate) => {
-    setIsLoggedIn(false);
-    setUserInfo(null); 
-    navigate("/"); 
+    clearUser();
+    navigate("/");
   };
 
   return (
     <Router>
-      <div className="App">
-        <CustomNavbar
-          isLoggedIn={isLoggedIn}
-          handleLogout={(navigate) => handleLogout(navigate)}
-          onShowModal={handleShowModal}
-        />
-
-        <Routes>
-          <Route path="/" element={<HomeScreen />} />
-          <Route
-            path="/dashboard"
-            element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <PatientDashboard userInfo={userInfo} />
-            </ProtectedRoute>
-            } 
-          />
-          <Route
-            path="/doctor-dashboard"
-            element={
-              <ProtectedRoute isLoggedIn={isLoggedIn}>
-                <DoctorDashboard userInfo={userInfo} />
-            </ProtectedRoute>} 
-          />
-        </Routes>
-
-        <Footer />
-
-        <AuthModal
-          show={showModal}
-          handleClose={handleCloseModal}
-          mode={modalMode}
-          onLogin={(user, navigate) => handleLogin(user, navigate)} 
-        />
-      </div>
+      <CustomNavbar onShowModal={handleShowModal} onLogout={handleLogout} />
+      <Routes>
+        <Route path="/" element={<HomeScreen />} />
+        <Route path="/dashboard" element={<ProtectedRoute user={user}><PatientDashboard /></ProtectedRoute>} />
+        <Route path="/doctor-dashboard" element={<ProtectedRoute user={user}><DoctorDashboard /></ProtectedRoute>} />
+      </Routes>
+      <Footer />
+      <AuthModal show={showModal} handleClose={handleCloseModal} mode={modalMode} onLogin={handleLogin} />
     </Router>
   );
 }
 
-export default App
+export default App;

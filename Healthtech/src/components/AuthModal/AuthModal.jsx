@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useStore from "../../useStore";  // Importa la tienda Zustand
+import PropTypes from "prop-types";
 
-const API_BASE_URL = "https://dummyjson.com";
+const API_BASE_URL = "http://localhost:8000/api";  // Actualiza esta URL según sea necesario
 
 function AuthModal({ show, handleClose, mode, onLogin }) {
   const isLogin = mode === "login";
@@ -12,6 +14,7 @@ function AuthModal({ show, handleClose, mode, onLogin }) {
   const [error, setError] = useState("");
 
   const navigate = useNavigate(); 
+  const setUser = useStore((state) => state.setUser);  // Obtén la función setUser de la tienda Zustand
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -21,9 +24,9 @@ function AuthModal({ show, handleClose, mode, onLogin }) {
   
     try {
       const loginResponse = await axios.post(
-        `${API_BASE_URL}/auth/login`,
+        `${API_BASE_URL}/auth/login/`,
         {
-          username: email,
+          email: email,
           password: password,
         },
         {
@@ -31,19 +34,15 @@ function AuthModal({ show, handleClose, mode, onLogin }) {
         }
       );
   
-      const { accessToken } = loginResponse.data;
-  
+      const { user } = loginResponse.data;
 
-      const userResponse = await axios.get(`${API_BASE_URL}/user/me`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-  
-      const user = userResponse.data;
-  
-      if (!user.role) {
+      // Verificar si el usuario tiene un rol
+      if (!user.user_type) {
         throw new Error("User role not found.");
       }
-  
+
+      // Almacenar la información del usuario en Zustand
+      setUser(user);
       onLogin(user, navigate); 
       handleClose();
     } catch (error) {
@@ -84,5 +83,12 @@ function AuthModal({ show, handleClose, mode, onLogin }) {
     </Modal>
   );
 }
+
+AuthModal.propTypes = {
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  mode: PropTypes.oneOf(["login", "register"]).isRequired,
+  onLogin: PropTypes.func.isRequired,
+};
 
 export default AuthModal;
