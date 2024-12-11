@@ -24,6 +24,11 @@ PROD = os.environ.get('PROD') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Añadir la URL de tu frontend aquí
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -36,12 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
+    'corsheaders',  # Añadir corsheaders aquí
     'authentication',
     'especialidad',
     'users',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # Añadir CorsMiddleware aquí
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
