@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, ListGroup, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -14,6 +15,7 @@ function DoctorDashboard({ user }) {
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
   const clearUser = useStore((state) => state.clearUser); // Zustand action to clear user
+  const navigate = useNavigate(); // Initialize navigate function
 
   const handleLogout = () => {
     clearUser();
@@ -40,14 +42,28 @@ function DoctorDashboard({ user }) {
       return [];
     }
   };
-
+  const handlePatientClick = (patient) => {
+    // Navigate to medical records page with patient details
+    navigate("/medical-records", {
+      state: {
+        patientId: patient.id,
+        patientFirstName: patient.first_name,
+        patientLastName: patient.last_name,
+      },
+    });
+  };
   useEffect(() => {
     const loadData = async () => {
       try {
         const doctorsData = await fetchDoctors();
         setDoctors(doctorsData);
 
-        const citasData = await getAppointments(user.user_id, "agendada", "fecha,hora_inicio", "asc");
+        const citasData = await getAppointments(
+          user.user_id,
+          "agendada",
+          "fecha,hora_inicio",
+          "asc"
+        );
         setCitas(citasData);
       } catch (error) {
         console.error("Error loading data:", error);
@@ -84,7 +100,11 @@ function DoctorDashboard({ user }) {
             <Button variant="link" className="sidebar-icon">
               <i className="bi bi-gear"></i>
             </Button>
-            <Button variant="link" className="sidebar-icon" onClick={handleLogout}>
+            <Button
+              variant="link"
+              className="sidebar-icon"
+              onClick={handleLogout}
+            >
               <i className="bi bi-box-arrow-right"></i>
             </Button>
           </Col>
@@ -93,20 +113,31 @@ function DoctorDashboard({ user }) {
             <Row className="top-bar align-items-center mb-4">
               <Col>
                 <div className="search-bar">
-                  <input type="text" className="form-control search-input" placeholder="Search" />
+                  <input
+                    type="text"
+                    className="form-control search-input"
+                    placeholder="Search"
+                  />
                 </div>
               </Col>
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img src={user.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  <img
+                    src={user.image || "https://via.placeholder.com/40"}
+                    alt="User"
+                    className="rounded-circle"
+                  />
                   <span className="ms-2">Dr. {user.first_name}</span>
                 </div>
               </Col>
             </Row>
 
             <h3 className="text-black">
-              Good Morning <span className="text-danger">Dr. {`${user.first_name} ${user.last_name}`}</span>
+              Good Morning{" "}
+              <span className="text-danger">
+                Dr. {`${user.first_name} ${user.last_name}`}
+              </span>
             </h3>
 
             <Row className="greeting-section">
@@ -135,18 +166,34 @@ function DoctorDashboard({ user }) {
                             <ListGroup>
                               {column1Patients.length > 0 ? (
                                 column1Patients.map((cita, index) => (
-                                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
+                                  <ListGroup.Item
+                                    key={index}
+                                    className="d-flex align-items-center justify-content-between cursor-pointer"
+                                    onClick={() =>
+                                      handlePatientClick(cita.paciente)
+                                    }
+                                  >
                                     <div className="d-flex align-items-center gap-3">
-                                      <span className="circle-icon bg-info">{cita.paciente.initials}</span>
+                                      <span className="circle-icon bg-info">
+                                        {cita.paciente.initials}
+                                      </span>
                                       <div>
                                         <p className="mb-0">
-                                          {cita.paciente.first_name} {cita.paciente.last_name}
+                                          {cita.paciente.first_name}{" "}
+                                          {cita.paciente.last_name}
                                         </p>
-                                        <p className="mb-0 text-muted small">{cita.detalle}</p>
+                                        <p className="mb-0 text-muted small">
+                                          {cita.detalle}
+                                        </p>
                                       </div>
                                     </div>
-                                    <span className={`time-container ms-auto schedule-time txt-info bg-light-info`}>
-                                      {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
+                                    <span
+                                      className={`time-container ms-auto schedule-time txt-info bg-light-info`}
+                                    >
+                                      {dayjs(
+                                        `2024-01-01T${cita.hora_inicio}`,
+                                        "HH:mm:ss"
+                                      ).format("h:mm A")}
                                     </span>
                                   </ListGroup.Item>
                                 ))
@@ -159,18 +206,34 @@ function DoctorDashboard({ user }) {
                             <ListGroup>
                               {column2Patients.length > 0 ? (
                                 column2Patients.map((cita, index) => (
-                                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-between">
+                                  <ListGroup.Item
+                                    key={index}
+                                    className="d-flex align-items-center justify-content-between cursor-pointer"
+                                    onClick={() =>
+                                      handlePatientClick(cita.paciente)
+                                    }
+                                  >
                                     <div className="d-flex align-items-center gap-3">
-                                      <span className="circle-icon bg-primary">{cita.paciente.initials}</span>
+                                      <span className="circle-icon bg-primary">
+                                        {cita.paciente.initials}
+                                      </span>
                                       <div>
                                         <p className="mb-0">
-                                          {cita.paciente.first_name} {cita.paciente.last_name}
+                                          {cita.paciente.first_name}{" "}
+                                          {cita.paciente.last_name}
                                         </p>
-                                        <p className="mb-0 text-muted small">{cita.detalle}</p>
+                                        <p className="mb-0 text-muted small">
+                                          {cita.detalle}
+                                        </p>
                                       </div>
                                     </div>
-                                    <span className={`time-container ms-auto schedule-time txt-primary bg-light-primary`}>
-                                      {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
+                                    <span
+                                      className={`time-container ms-auto schedule-time txt-primary bg-light-primary`}
+                                    >
+                                      {dayjs(
+                                        `2024-01-01T${cita.hora_inicio}`,
+                                        "HH:mm:ss"
+                                      ).format("h:mm A")}
                                     </span>
                                   </ListGroup.Item>
                                 ))

@@ -9,6 +9,7 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
 
@@ -21,6 +22,12 @@ const MedicalRecordsPage = ({
   const [selectedConsultation, setSelectedConsultation] = useState(null);
   const [showNewConsultationModal, setShowNewConsultationModal] =
     useState(false);
+  const location = useLocation();
+  const [patientDetails, setPatientDetails] = useState({
+    patientId: location.state?.patientId || "paciente desconocido",
+    patientFirstName: location.state?.patientFirstName || "Patient",
+    patientLastName: location.state?.patientLastName || "Name",
+  });
 
   // New consultation form state
   const [newConsultation, setNewConsultation] = useState({
@@ -418,7 +425,8 @@ const MedicalRecordsPage = ({
     <Container>
       <Row className="mb-3">
         <Col>
-          <h3 className="text-center">Paciente: {patientId}</h3>
+          Paciente:{" "}
+          {`${patientDetails.patientFirstName} ${patientDetails.patientLastName}`}
         </Col>
       </Row>
 

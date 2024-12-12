@@ -8,6 +8,7 @@ import PatientDashboard from "./components/Dashboard/PatientDashboard";
 import DoctorDashboard from "./components/Dashboard/DoctorDashboard";
 import AuthModal from "./components/AuthModal/AuthModal";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
+import MedicalRecordsPage from "./components/medicalRecords/MedicalRecordPage";
 
 function App() {
   const { isLoggedIn, user, restoreSession, login, logout } = useAuthStore();
@@ -39,7 +40,10 @@ function App() {
     if (user.user_type === "Medico" || user.user_type === "admin") {
       console.log("Navigating to /doctor-dashboard");
       navigate("/doctor-dashboard");
-    } else if (user.user_type === "Paciente" || user.user_type === "moderator") {
+    } else if (
+      user.user_type === "Paciente" ||
+      user.user_type === "moderator"
+    ) {
       console.log("Navigating to /dashboard");
       navigate("/dashboard");
     } else {
@@ -58,7 +62,11 @@ function App() {
     <Router>
       <div className="App">
         {/* Navbar */}
-        <CustomNavbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} onShowModal={handleShowModal} />
+        <CustomNavbar
+          isLoggedIn={isLoggedIn}
+          handleLogout={handleLogout}
+          onShowModal={handleShowModal}
+        />
 
         {/* Routes */}
         <Routes>
@@ -79,13 +87,19 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/medical-records" element={<MedicalRecordsPage />} />
         </Routes>
 
         {/* Footer */}
         <Footer />
 
         {/* Authentication Modal */}
-        <AuthModal show={showModal} handleClose={handleCloseModal} mode={modalMode} onLogin={handleLogin} />
+        <AuthModal
+          show={showModal}
+          handleClose={handleCloseModal}
+          mode={modalMode}
+          onLogin={handleLogin}
+        />
       </div>
     </Router>
   );
