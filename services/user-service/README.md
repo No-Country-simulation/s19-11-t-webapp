@@ -226,6 +226,37 @@ Se espera el siguiente mensaje, junto al código HTTP 201 Created.
   "message": "Paciente creado exitosamente"
 }
 ```
+### POST Asignar Historial Médico a Paciente
+
+Este endpoint asigna un ID de historia clínica a un paciente específico.
+
+```http
+  POST /api/pacientes/asignar-historial/
+
+| Field               | Type      | Description                                         |
+| :------------------ | :-------- | :-------------------------------------------------- |
+| `id_paciente`       | `integer` | **Required**. ID del paciente.                      |
+| `historial_medico`  | `string`  | **Required**. ID de la historia clínica (MongoDB).  |
+
+#### Ejemplo
+
+```json
+{
+  "id_paciente": 1,
+  "historial_medico": "60c72b2f9b1e8a5f6d8e4b2a"
+}
+```
+
+#### Respuesta esperada
+
+Se espera el siguiente mensaje, junto al código HTTP 201 Created.
+
+```json
+{
+  "message": "Historial médico asignado correctamente"
+}
+```
+
 ---
 
 ### Médicos
