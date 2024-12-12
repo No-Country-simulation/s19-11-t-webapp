@@ -12,7 +12,6 @@ const useAuthStore = create((set) => ({
   
     // Persist user data in localStorage
     localStorage.setItem("user", JSON.stringify(user));
-    
   },
 
   // Logout action
@@ -21,7 +20,6 @@ const useAuthStore = create((set) => ({
     
     // Clear localStorage
     localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
   },
 
   // Restore session on app load
