@@ -52,14 +52,18 @@ function PatientDashboard({ user }) {
 
   useEffect(() => {
     if (user) {
-      getAppointments(user.id, "realizada", "fecha", "desc").then(setUltimasCitas);
-      getAppointments(user.id, "agendada", "fecha", "asc").then(setProximasCitas);
+      getAppointments(user.id, "realizada", "fecha,hora_inicio", "desc").then(setUltimasCitas);
+      getAppointments(user.id, "agendada", "fecha,hora_inicio", "asc").then(setProximasCitas);
     }
-  }, [user]);
+  }, []);
 
+  const handleClose = () => {
+    setShowCrearCita(false);
+    if (user) getAppointments(user.id, "agendada", "fecha,hora_inicio", "asc").then(setProximasCitas);
+  };
   if (showCrearCita) {
     // Render CrearCita component when the state is true
-    return <CreateAppointment onClose={() => setShowCrearCita(false)} user={user} />;
+    return <CreateAppointment onClose={handleClose} user={user} />;
   }
 
   return (
@@ -140,7 +144,7 @@ function PatientDashboard({ user }) {
                                   onClick={async () => {
                                     const wasCanceled = await cancelAppointment(proximasCitas[0].id_cita);
                                     if (wasCanceled) {
-                                      const updatedCitas = await getAppointments(user.id, "pendiente", "fecha,hora_inicio", "asc");
+                                      const updatedCitas = await getAppointments(user.id, "agendada", "fecha,hora_inicio", "asc");
                                       setProximasCitas(updatedCitas);
                                     }
                                   }}
