@@ -237,4 +237,3 @@ class MedicoByEspecialidadView(APIView):
         medicos = Medico.objects.filter(especialidad=pk)
         data = MedicoSerializer(medicos, many=True).data
         return Response(data, status=status.HTTP_200_OK)
-

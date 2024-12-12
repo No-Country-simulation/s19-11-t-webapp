@@ -34,7 +34,7 @@ class PacienteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Paciente
-        fields = ['usuario', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'historial_medico']
+        fields = ['usuario', 'id_paciente', 'documento', 'direccion', 'fecha_nacimiento', 'genero', 'historial_medico']
 
     def validate(self, attrs):
         if not attrs.get('documento'):
@@ -88,7 +88,7 @@ class MedicoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Medico
-        fields = ['usuario', 'especialidad', 'nro_matricula']
+        fields = ['usuario', 'id_medico', 'especialidad', 'nro_matricula']
         partial = True
 
     def validate(self, attrs):
