@@ -12,8 +12,8 @@ import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
 function App() {
   const { isLoggedIn, user, restoreSession, login, logout } = useAuthStore();
 
-  const [showModal, setShowModal] = useState(false); 
-  const [modalMode, setModalMode] = useState("login"); 
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState("login");
 
   // Restore session on app load
   useEffect(() => {
@@ -36,7 +36,7 @@ function App() {
     console.log("User received in App.jsx handleLogin:", user);
     login(user); // Call Zustand's login function
 
-    if (user.user_type === "Doctor" || user.user_type === "admin") {
+    if (user.user_type === "Medico" || user.user_type === "admin") {
       console.log("Navigating to /doctor-dashboard");
       navigate("/doctor-dashboard");
     } else if (user.user_type === "Paciente" || user.user_type === "moderator") {
@@ -58,11 +58,7 @@ function App() {
     <Router>
       <div className="App">
         {/* Navbar */}
-        <CustomNavbar
-          isLoggedIn={isLoggedIn}
-          handleLogout={handleLogout}
-          onShowModal={handleShowModal}
-        />
+        <CustomNavbar isLoggedIn={isLoggedIn} handleLogout={handleLogout} onShowModal={handleShowModal} />
 
         {/* Routes */}
         <Routes>
@@ -89,12 +85,7 @@ function App() {
         <Footer />
 
         {/* Authentication Modal */}
-        <AuthModal
-          show={showModal}
-          handleClose={handleCloseModal}
-          mode={modalMode}
-          onLogin={handleLogin}
-        />
+        <AuthModal show={showModal} handleClose={handleCloseModal} mode={modalMode} onLogin={handleLogin} />
       </div>
     </Router>
   );

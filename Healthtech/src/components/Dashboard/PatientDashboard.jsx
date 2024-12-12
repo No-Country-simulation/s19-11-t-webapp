@@ -59,7 +59,7 @@ function PatientDashboard({ user }) {
 
   if (showCrearCita) {
     // Render CrearCita component when the state is true
-    return <CreateAppointment onClose={() => setShowCrearCita(false)} />;
+    return <CreateAppointment onClose={() => setShowCrearCita(false)} user={user} />;
   }
 
   return (
