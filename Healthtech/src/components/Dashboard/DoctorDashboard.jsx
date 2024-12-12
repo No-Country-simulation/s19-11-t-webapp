@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, ListGroup, Button } from "react-bootstrap";
-import { fetchPatients, fetchDoctors } from "../../api_services/api";
+import { fetchDoctors, getHorariosDisponibles } from "../../api_services/api";
 import "./style/doctorDashboard.css";
 import Calendar from "./calendarComponent";
 import MedicalRecordsButton from "../medicalRecords/MedicalRecordsButton";
