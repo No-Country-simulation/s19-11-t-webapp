@@ -28,19 +28,19 @@ function CustomNavbar({ isLoggedIn, handleLogout, onShowModal }) {
         {/* Navbar links */}
         <Navbar.Collapse id="navbar-nav">
           <Nav className="mx-auto">
-            <Nav.Link href="/" className="text-dark fw-bold">
+            <Nav.Link href="/" className="text-dark fw-bold-nav">
               Home
             </Nav.Link>
-            <Nav.Link href="#" className="text-dark fw-bold">
+            <Nav.Link href="#" className="text-dark fw-bold-nav">
               Service
             </Nav.Link>
-            <Nav.Link href="#" className="text-dark fw-bold">
+            <Nav.Link href="#" className="text-dark fw-bold-nav">
               Contact Us
             </Nav.Link>
-            <Nav.Link href="#" className="text-dark fw-bold">
+            <Nav.Link href="#" className="text-dark fw-bold-nav">
               Help
             </Nav.Link>
-            <Nav.Link href="#" className="text-dark fw-bold">
+            <Nav.Link href="#" className="text-dark fw-bold-nav">
               Blog
             </Nav.Link>
           </Nav>
@@ -68,8 +68,8 @@ function CustomNavbar({ isLoggedIn, handleLogout, onShowModal }) {
             ) : (
               <Button
                 variant="danger"
-                className="fw-bold"
-                onClick={logoutAndNavigate} 
+                className="fw-bold-btn"
+                onClick={logoutAndNavigate}
               >
                 Logout
               </Button>

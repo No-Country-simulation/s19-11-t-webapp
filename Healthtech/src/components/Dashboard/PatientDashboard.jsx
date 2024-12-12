@@ -235,10 +235,10 @@ function PatientDashboard({ user }) {
                     <Button variant="primary" className="mb-3 w-100" onClick={() => setShowCrearCita(true)}>
                       Book new appointment
                     </Button>
-                    <Button variant="outline-primary" className="mb-3 w-100">
+                    <Button variant="primary" className="mb-3 w-100">
                       Support
                     </Button>
-                    <Button variant="outline-primary" className="w-100">
+                    <Button variant="primary" className="w-100">
                       FAQ
                     </Button>
                   </Card.Body>
