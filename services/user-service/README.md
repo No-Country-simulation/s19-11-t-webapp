@@ -1,4 +1,3 @@
-
 # Auth User Microservice API
 
 ## Introducción
@@ -257,6 +256,18 @@ Este endpoint devuelve los detalles de un médico específico, identificado por 
 | :-------- | :-------- | :--------------------------- |
 | `id`      | `integer` | **Required**. Id del médico. |
 
+### Get Médicos por especialidad
+
+Este endpoint devuelve los detalles de los médicos por una especialidad en específico, identificada por su id de especialidad. Se debe proporcionar el id de la especialidad en la URL.
+
+```http
+  GET /api/medicos/especialidad/<int:pk>/
+```
+
+| Parameter | Type      | Description                                         |
+| :-------- | :-------- | :-------------------------------------------------- |
+| `pk`      | `integer` | **Required**. Id de la especialidad de los médicos. |
+
 #### POST Médico
 
 Este endpoint permite crear un nuevo médico. El cuerpo de la solicitud debe incluir los datos del usuario (email, contraseña, nombre, apellido, teléfono), así como la especialidad del médico y su número de matrícula.
@@ -335,18 +346,21 @@ Se espera el siguiente mensaje, junto al código HTTP 200 OK.
 
 ```json
 {
-  "user": {
-    "name": "John",
-    "last_name": "Doe",
-    "user_type": "Paciente"
-  }
+    "message": "Inicio de sesión exitoso",
+    "user": {
+        "id": 6,
+        "email": "medico3@example.com",
+        "first_name": "Andres",
+        "last_name": "Gonzalez",
+        "user_type": "Medico"
+    }
 }
 ```
 
-| Cookie          | Type       | Secure | Description                |
-| :-------------- | :--------- | :----- | :------------------------- |
-| `refresh_token` | `HTTPOnly` | `True` | Token para renovar acceso. |
-| `access_token`  | `HTTPOnly` | `True` | Token de acceso temporal.  |
+| Cookie      | Type       | Secure | HttpOnly | Description                       |
+| :-----------| :--------- | :----- | :------- | :-------------------------------- | 
+| `csrftoken` | `HTTP`     | `True` | `False`  | Token para prevenir ataques CSRF. |
+| `sessionid` | `HTTP`     | `True` | `True`   | Token de sesión del usuario.      |
 
 
 #### POST Logout

@@ -30,7 +30,7 @@ class Paciente(models.Model):
     direccion = models.CharField(max_length=100)
     fecha_nacimiento = models.DateField()
     genero = models.CharField(max_length=1)
-    historial_medico = models.IntegerField(null=True)
+    historial_medico = models.CharField(max_length=24, null=True)  # Ajustado para ID de MongoDB
 
     class Meta:
         db_table = 'paciente'
@@ -57,4 +57,3 @@ class Medico(models.Model):
 
     def __str__(self):
         return f'{self.id_usuario.first_name} {self.id_usuario.last_name}'
-
