@@ -12,6 +12,7 @@ import {
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import axios from "axios";
+import VideoChat from "../Videochat";
 
 const MedicalRecordsPage = ({
   patientId = "paciente_001",
@@ -23,7 +24,7 @@ const MedicalRecordsPage = ({
   const [showNewConsultationModal, setShowNewConsultationModal] =
     useState(false);
   const location = useLocation();
-  const [patientDetails, setPatientDetails] = useState({
+  const [patientDetails] = useState({
     patientId: location.state?.patientId || "paciente desconocido",
     patientFirstName: location.state?.patientFirstName || "Patient",
     patientLastName: location.state?.patientLastName || "Name",
@@ -259,6 +260,7 @@ const MedicalRecordsPage = ({
           <Modal.Title>Nueva Consulta</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <VideoChat />
           <Form onSubmit={handleAddConsultation}>
             <Form.Group>
               <Form.Label>Motivo de Consulta</Form.Label>
