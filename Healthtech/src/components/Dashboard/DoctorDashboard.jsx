@@ -1,47 +1,41 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, ListGroup, Button } from "react-bootstrap";
-import { fetchDoctors, getHorariosDisponibles } from "../../api_services/api";
+import PropTypes from "prop-types";
+import axios from "axios";
+import dayjs from "dayjs";
+import { fetchDoctors } from "../../api_services/api";
+import useStore from "../../useStore"; // Import Zustand store
 import "./style/doctorDashboard.css";
 import Calendar from "./calendarComponent";
 import MedicalRecordsButton from "../medicalRecords/MedicalRecordsButton";
-import axios from "axios";
-import dayjs from "dayjs";
 
-function DoctorDashboard({ userInfo }) {
-  console.log("userInfo", userInfo);
+function DoctorDashboard({ user }) {
   const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [citas, setCitas] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const clearUser = useStore((state) => state.clearUser); // Zustand action to clear user
 
-  const medicoId = userInfo.id ? userInfo.id : 1;
+  const handleLogout = () => {
+    clearUser();
+    window.location.href = "/"; // Redirect to the home page after logout
+  };
 
-  // Traer citas segun filtro
   const getAppointments = async (medicoId, estado, sort, order) => {
     try {
-      // Endpoint del servicio
       const apiUrl = "http://localhost:3000/api/citas";
-
-      // const fecha = new Date();
-      const fecha = "2024-12-12";
-
-      console.log("paso fecha:", fecha);
-      // Filtros
+      const fecha = dayjs().format("YYYY-MM-DD"); // Current date
       const params = {
-        medicoId: medicoId,
-        fecha: fecha,
-        estado: estado,
-        sort: sort,
-        order: order,
+        medicoId,
+        fecha,
+        estado,
+        sort,
+        order,
       };
 
       const response = await axios.get(apiUrl, { params });
-
-      const citas = response.data;
-      console.log("Citas devueltas por el back:", citas);
-
-      return citas;
+      return response.data;
     } catch (error) {
-      console.error("Error al obtener las últimas citas realizadas:", error);
+      console.error("Error fetching appointments:", error);
       return [];
     }
   };
@@ -52,8 +46,8 @@ function DoctorDashboard({ userInfo }) {
         const doctorsData = await fetchDoctors();
         setDoctors(doctorsData);
 
-        let citas = await getAppointments(medicoId, "agendada", "fecha,hora_inicio", "asc");
-        setCitas(citas);
+        const citasData = await getAppointments(user.id, "agendada", "fecha,hora_inicio", "asc");
+        setCitas(citasData);
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
@@ -62,15 +56,15 @@ function DoctorDashboard({ userInfo }) {
     };
 
     loadData();
-  }, []);
+  }, [user.id]);
 
   if (loading) {
     return <p>Loading dashboard...</p>;
   }
 
-  const mitad = citas.length / 2;
+  const mitad = Math.ceil(citas.length / 2);
   const column1Patients = citas.slice(0, mitad);
-  const column2Patients = citas.slice(mitad, 15);
+  const column2Patients = citas.slice(mitad);
 
   return (
     <div className="dashboard-container">
@@ -78,7 +72,7 @@ function DoctorDashboard({ userInfo }) {
         <Row>
           <Col md={2} className="sidebar d-flex flex-column">
             <Button variant="link" className="sidebar-icon">
-              <i className="bi bi-grid"></i>
+              <i className="bi bi-house-door"></i>
             </Button>
             <Button variant="link" className="sidebar-icon">
               <i className="bi bi-calendar"></i>
@@ -89,7 +83,7 @@ function DoctorDashboard({ userInfo }) {
             <Button variant="link" className="sidebar-icon">
               <i className="bi bi-gear"></i>
             </Button>
-            <Button variant="link" className="sidebar-icon">
+            <Button variant="link" className="sidebar-icon" onClick={handleLogout}>
               <i className="bi bi-box-arrow-right"></i>
             </Button>
           </Col>
@@ -104,14 +98,14 @@ function DoctorDashboard({ userInfo }) {
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img src={userInfo?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
-                  <span className="ms-2">`Dr. {userInfo ? userInfo.firstName : "none"}`</span>
+                  <img src={user.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  <span className="ms-2">Dr. {user.first_name}</span>
                 </div>
               </Col>
             </Row>
 
             <h3 className="text-black">
-              Good Morning <span className="text-danger">`Dr. {userInfo ? userInfo.firstName + " " + userInfo.lastName : "none"}`</span>
+              Good Morning <span className="text-danger">Dr. {`${user.first_name} ${user.last_name}`}</span>
             </h3>
 
             <Row className="greeting-section">
@@ -204,5 +198,14 @@ function DoctorDashboard({ userInfo }) {
     </div>
   );
 }
+
+DoctorDashboard.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    first_name: PropTypes.string.isRequired,
+    last_name: PropTypes.string.isRequired,
+    user_type: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default DoctorDashboard;

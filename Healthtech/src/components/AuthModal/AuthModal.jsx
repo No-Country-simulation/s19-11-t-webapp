@@ -3,57 +3,46 @@ import PropTypes from "prop-types";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useStore from "../../useStore"; // Import Zustand store
+
+const API_BASE_URL = "http://localhost:8000/api"; // Update this URL as needed
 
 function AuthModal({ show, handleClose, mode, onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-
-  // const handleLogin = async () => {
-    
-  //   try {
-  //     const response = await axios.post("http://localhost:8000/api/auth/login/", {
-  //       email,
-  //       password,
-  //     });
-  //     console.log("Login response:", response.data);
-
-  //     onLogin(response.data.user, navigate); 
-  //     handleClose(); 
-  //   } catch (error) {
-  //     if (error.response) {
-  //       console.error("Server error:", error.response.data);
-  //       setError(error.response.data?.message || "Invalid email or password. Please try again.");
-  //     } else if (error.request) {
-  //       console.error("No response from server:", error.request);
-  //       setError("No response from server. Please try again later.");
-  //     } else {
-  //       console.error("Login error:", error.message);
-  //       setError("An error occurred. Please try again.");
-  //     }
-  //   }
-  // };
+  const setUser = useStore((state) => state.setUser); // Zustand action for setting user
 
   const handleLogin = async () => {
     try {
-      console.log("Starting login with email:", email, "password:", password); // Log inputs
-      const response = await axios.post("http://localhost:8000/api/auth/login/", {
-        email,
-        password,
-      });
-      console.log("Login response data:", response.data); // Log server response
-  
-      onLogin(response.data.user, navigate); // Call onLogin
-      console.log("onLogin called with user:", response.data.user); // Log onLogin input
-      handleClose(); // Close modal
+      console.log("Starting login with email:", email, "password:", password); // Debug inputs
+      const loginResponse = await axios.post(
+        `${API_BASE_URL}/auth/login/`,
+        {
+          email,
+          password,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      const { user } = loginResponse.data;
+      console.log("Login response data:", user); // Debug response data
+
+      if (!user.user_type) {
+        throw new Error("User role not found.");
+      }
+
+      setUser(user); // Store user in Zustand
+      onLogin(user, navigate); // Pass user to parent onLogin
+      handleClose(); // Close the modal
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       setError(error.response?.data?.message || "An error occurred. Please try again.");
     }
   };
-  
-  
 
   return (
     <Modal show={show} onHide={handleClose} centered>
@@ -91,7 +80,7 @@ function AuthModal({ show, handleClose, mode, onLogin }) {
 AuthModal.propTypes = {
   show: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  mode: PropTypes.string.isRequired,
+  mode: PropTypes.oneOf(["login", "register"]).isRequired,
   onLogin: PropTypes.func.isRequired,
 };
 

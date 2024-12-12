@@ -7,11 +7,10 @@ import Footer from "./components/Footer/Footer";
 import PatientDashboard from "./components/Dashboard/PatientDashboard";
 import DoctorDashboard from "./components/Dashboard/DoctorDashboard";
 import AuthModal from "./components/AuthModal/AuthModal";
-
-
+import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
 
 function App() {
-  const { isLoggedIn, user, restoreSession, logout } = useAuthStore();
+  const { isLoggedIn, user, restoreSession, login, logout } = useAuthStore();
 
   const [showModal, setShowModal] = useState(false); 
   const [modalMode, setModalMode] = useState("login"); 
@@ -34,20 +33,26 @@ function App() {
 
   // Handle user login
   const handleLogin = (user, navigate) => {
-    console.log("User received in App.jsx handleLogin:", user); // Log user data
-    useAuthStore.getState().login(user); // Call Zustand's login function
-    console.log("After Zustand login, navigating to:", user.user_type === "Paciente" ? "/dashboard" : "/doctor-dashboard");
-  
-    if (user.user_type === "Doctor") {
+    console.log("User received in App.jsx handleLogin:", user);
+    login(user); // Call Zustand's login function
+
+    if (user.user_type === "Doctor" || user.user_type === "admin") {
+      console.log("Navigating to /doctor-dashboard");
       navigate("/doctor-dashboard");
-    } else if (user.user_type === "Paciente") {
+    } else if (user.user_type === "Paciente" || user.user_type === "moderator") {
+      console.log("Navigating to /dashboard");
       navigate("/dashboard");
-      console.log("Navigated to /dashboard");
     } else {
       console.error("Unexpected user type:", user.user_type);
     }
   };
-  
+
+  // Handle user logout
+  const handleLogout = (navigate) => {
+    console.log("Logging out...");
+    logout();
+    navigate("/");
+  };
 
   return (
     <Router>
@@ -55,8 +60,8 @@ function App() {
         {/* Navbar */}
         <CustomNavbar
           isLoggedIn={isLoggedIn}
-          handleLogout={logout}
-          onShowModal={handleShowModal} 
+          handleLogout={handleLogout}
+          onShowModal={handleShowModal}
         />
 
         {/* Routes */}
@@ -64,11 +69,19 @@ function App() {
           <Route path="/" element={<HomeScreen />} />
           <Route
             path="/dashboard"
-            element={isLoggedIn ? <PatientDashboard userInfo={user} /> : <HomeScreen />}
+            element={
+              <ProtectedRoute user={user}>
+                <PatientDashboard />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/doctor-dashboard"
-            element={isLoggedIn ? <DoctorDashboard userInfo={user} /> : <HomeScreen />}
+            element={
+              <ProtectedRoute user={user}>
+                <DoctorDashboard />
+              </ProtectedRoute>
+            }
           />
         </Routes>
 

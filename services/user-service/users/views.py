@@ -10,6 +10,7 @@ from .serializers import UsuarioSerializer, PacienteSerializer, MedicoSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class UsuariosViews(APIView):
     permission_classes = [AllowAny]
@@ -53,6 +54,7 @@ class UsuariosViews(APIView):
             usuario_serializer.save()
             return Response(usuario_serializer.data, status=status.HTTP_201_CREATED)
         return Response(usuario_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class PacienteViews(APIView):
@@ -107,6 +109,48 @@ class PacienteViews(APIView):
         serializer.save()
 
         return Response({'message': 'Paciente creado exitosamente'}, status=status.HTTP_201_CREATED)
+    
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AsignarHistorialMedicoView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description='Asignar un ID de historia clínica a un paciente',
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'id_paciente': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID del paciente'),
+                'historial_medico': openapi.Schema(type=openapi.TYPE_STRING, description='ID de la historia clínica')
+            }
+        ),
+        responses={
+            200: 'Historial médico asignado correctamente',
+            400: 'Solicitud incorrecta',
+            404: 'Paciente no encontrado'
+        }
+    )
+    @transaction.atomic
+    def post(self, request):
+        '''
+        Asignar un ID de historia clínica a un paciente.
+        '''
+        id_paciente = request.data.get('id_paciente')
+        historial_medico = request.data.get('historial_medico')
+
+        if not id_paciente or not historial_medico:
+            return Response({'error': 'id_paciente y historial_medico son requeridos'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            paciente = Paciente.objects.get(id_paciente=id_paciente)
+        except Paciente.DoesNotExist:
+            return Response({'error': 'Paciente no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        paciente.historial_medico = historial_medico
+        paciente.save()
+
+        return Response({'message': 'Historial médico asignado correctamente'}, status=status.HTTP_200_OK)
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class MedicoViews(APIView):
@@ -172,4 +216,25 @@ class MedicoViews(APIView):
         serializer.save()
 
         return Response({'message': 'Médico creado exitosamente'}, status=status.HTTP_201_CREATED)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class MedicoByEspecialidadView(APIView):
+    permission_classes = [AllowAny]
+
+    @swagger_auto_schema(
+        operation_description='Obtener una lista de médicos por especialidad',
+        responses={
+            200: MedicoSerializer(many=True),
+            404: 'No encontrado'
+        }
+    )
+
+    def get(self, request, pk):
+        '''
+        Obtener una lista de médicos por especialidad.
+        '''
+        medicos = Medico.objects.filter(especialidad=pk)
+        data = MedicoSerializer(medicos, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
 

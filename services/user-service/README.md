@@ -1,4 +1,3 @@
-
 # Auth User Microservice API
 
 ## Introducción
@@ -227,6 +226,37 @@ Se espera el siguiente mensaje, junto al código HTTP 201 Created.
   "message": "Paciente creado exitosamente"
 }
 ```
+### POST Asignar Historial Médico a Paciente
+
+Este endpoint asigna un ID de historia clínica a un paciente específico.
+
+```http
+  POST /api/pacientes/asignar-historial/
+
+| Field               | Type      | Description                                         |
+| :------------------ | :-------- | :-------------------------------------------------- |
+| `id_paciente`       | `integer` | **Required**. ID del paciente.                      |
+| `historial_medico`  | `string`  | **Required**. ID de la historia clínica (MongoDB).  |
+
+#### Ejemplo
+
+```json
+{
+  "id_paciente": 1,
+  "historial_medico": "60c72b2f9b1e8a5f6d8e4b2a"
+}
+```
+
+#### Respuesta esperada
+
+Se espera el siguiente mensaje, junto al código HTTP 201 Created.
+
+```json
+{
+  "message": "Historial médico asignado correctamente"
+}
+```
+
 ---
 
 ### Médicos
@@ -256,6 +286,18 @@ Este endpoint devuelve los detalles de un médico específico, identificado por 
 | Parameter | Type      | Description                  |
 | :-------- | :-------- | :--------------------------- |
 | `id`      | `integer` | **Required**. Id del médico. |
+
+### Get Médicos por especialidad
+
+Este endpoint devuelve los detalles de los médicos por una especialidad en específico, identificada por su id de especialidad. Se debe proporcionar el id de la especialidad en la URL.
+
+```http
+  GET /api/medicos/especialidad/<int:pk>/
+```
+
+| Parameter | Type      | Description                                         |
+| :-------- | :-------- | :-------------------------------------------------- |
+| `pk`      | `integer` | **Required**. Id de la especialidad de los médicos. |
 
 #### POST Médico
 
@@ -335,18 +377,21 @@ Se espera el siguiente mensaje, junto al código HTTP 200 OK.
 
 ```json
 {
-  "user": {
-    "name": "John",
-    "last_name": "Doe",
-    "user_type": "Paciente"
-  }
+    "message": "Inicio de sesión exitoso",
+    "user": {
+        "id": 6,
+        "email": "medico3@example.com",
+        "first_name": "Andres",
+        "last_name": "Gonzalez",
+        "user_type": "Medico"
+    }
 }
 ```
 
-| Cookie          | Type       | Secure | Description                |
-| :-------------- | :--------- | :----- | :------------------------- |
-| `refresh_token` | `HTTPOnly` | `True` | Token para renovar acceso. |
-| `access_token`  | `HTTPOnly` | `True` | Token de acceso temporal.  |
+| Cookie      | Type       | Secure | HttpOnly | Description                       |
+| :-----------| :--------- | :----- | :------- | :-------------------------------- | 
+| `csrftoken` | `HTTP`     | `True` | `False`  | Token para prevenir ataques CSRF. |
+| `sessionid` | `HTTP`     | `True` | `True`   | Token de sesión del usuario.      |
 
 
 #### POST Logout
