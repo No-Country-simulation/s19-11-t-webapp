@@ -1,60 +1,53 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import useStore from "../../useStore";  // Importa la tienda Zustand
-import PropTypes from "prop-types";
+import useStore from "../../useStore"; // Import Zustand store
 
-const API_BASE_URL = "http://localhost:8000/api";  // Actualiza esta URL según sea necesario
+const API_BASE_URL = "http://localhost:8000/api"; // Update this URL as needed
 
 function AuthModal({ show, handleClose, mode, onLogin }) {
-  const isLogin = mode === "login";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  const navigate = useNavigate(); 
-  const setUser = useStore((state) => state.setUser);  // Obtén la función setUser de la tienda Zustand
+  const navigate = useNavigate();
+  const setUser = useStore((state) => state.setUser); // Zustand action for setting user
 
   const handleLogin = async () => {
-    if (!email || !password) {
-      setError("Both email and password are required.");
-      return;
-    }
-  
     try {
+      console.log("Starting login with email:", email, "password:", password); // Debug inputs
       const loginResponse = await axios.post(
         `${API_BASE_URL}/auth/login/`,
         {
-          email: email,
-          password: password,
+          email,
+          password,
         },
         {
           headers: { "Content-Type": "application/json" },
         }
       );
-  
-      const { user } = loginResponse.data;
 
-      // Verificar si el usuario tiene un rol
+      const { user } = loginResponse.data;
+      console.log("Login response data:", user); // Debug response data
+
       if (!user.user_type) {
         throw new Error("User role not found.");
       }
 
-      // Almacenar la información del usuario en Zustand
-      setUser(user);
-      onLogin(user, navigate); 
-      handleClose();
+      setUser(user); // Store user in Zustand
+      onLogin(user, navigate); // Pass user to parent onLogin
+      handleClose(); // Close the modal
     } catch (error) {
-      setError("Invalid email or password. Please try again.");
-      console.error("Login error:", error);
+      console.error("Login error:", error.response?.data || error.message);
+      setError(error.response?.data?.message || "An error occurred. Please try again.");
     }
   };
 
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>{isLogin ? "Log In" : "Register"}</Modal.Title>
+        <Modal.Title>{mode === "login" ? "Log In" : "Register"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
@@ -76,7 +69,7 @@ function AuthModal({ show, handleClose, mode, onLogin }) {
             />
           </Form.Group>
           <Button variant="primary" onClick={handleLogin} className="w-100">
-            {isLogin ? "Log In" : "Sign Up"}
+            {mode === "login" ? "Log In" : "Sign Up"}
           </Button>
         </Form>
       </Modal.Body>

@@ -4,7 +4,9 @@ export const citasService = {
   // Obtener todas las citas con filtros opcionales
   getAllCitas: async ({ fecha, estado, pacienteId, medicoId, sort, order, limit }) => {
     console.log("pacienteId", pacienteId);
+    console.log("medicoId", medicoId);
     console.log("estado", estado);
+    console.log("fecha", fecha);
     console.log("limit", limit);
     console.log("sort", sort);
     console.log("order", order);

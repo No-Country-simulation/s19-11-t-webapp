@@ -1,5 +1,6 @@
 
 import { Navbar, Nav, Button, Container } from "react-bootstrap";
+import PropTypes from 'prop-types';
 import { useNavigate } from "react-router-dom";
 import "./styles/navbar.css";
 
@@ -48,18 +49,18 @@ function CustomNavbar({ isLoggedIn, handleLogout, onShowModal }) {
           <div className="d-flex align-items-center">
             {!isLoggedIn ? (
               <>
-                {/* Show Login/Signup buttons if not logged in */}
+
                 <Nav.Link
                   href="#"
                   className="text-primary fw-bold me-3"
-                  onClick={() => onShowModal("signup")}
+                  onClick={() => onShowModal("signup")} 
                 >
                   Sign Up
                 </Nav.Link>
                 <Button
                   variant="primary"
                   className="fw-bold btn-login"
-                  onClick={() => onShowModal("login")}
+                  onClick={() => onShowModal("login")} 
                 >
                   Log In
                 </Button>
@@ -68,16 +69,24 @@ function CustomNavbar({ isLoggedIn, handleLogout, onShowModal }) {
               <Button
                 variant="danger"
                 className="fw-bold"
-                onClick={logoutAndNavigate}
+                onClick={logoutAndNavigate} 
               >
                 Logout
               </Button>
             )}
           </div>
+
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
+
+
+CustomNavbar.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired, 
+  handleLogout: PropTypes.func.isRequired, 
+  onShowModal: PropTypes.func.isRequired, 
+};
 
 export default CustomNavbar;
