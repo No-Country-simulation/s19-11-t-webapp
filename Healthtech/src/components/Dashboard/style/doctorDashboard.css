@@ -1,70 +1,128 @@
-.container-fluid{
-  max-width: 1320px;
+.container-fluid {
+  max-width: 1580px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .dashboard-container {
-    background-color: #0B94CA;
-    height: 100%;
-    color: white;
-  }
-  
-  .sidebar {
-    background-color: #0B94CA;
-    height: 100vh;
-    padding: 1rem 0;
-  }
-  
-  .sidebar-icon {
-    color: white;
-    font-size: 1.5rem;
-    margin: 1rem auto;
-    text-align: center;
-  }
-  
-  .main-content {
-    padding: 1.5rem;
-  }
-  
-  .search-bar .search-input {
-    border-radius: 30px;
-    border: none;
-    padding: 0.5rem 2rem;
-  }
-  
-  .user-profile img {
-    width: 40px;
-    height: 40px;
-  }
+  background-color: #0b94ca;
+  height: 100%;
+  color: white;
+}
 
-  .greeting-stats {
-    padding: 10px; 
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important; 
-    gap: 20px;
-    max-width: 500px;
-  }
+.sidebar {
+  background-color: #0b94ca;
+  height: 100vh;
+  padding: 1rem 0;
+}
 
-  .greeting-stats h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 0;
-  }
+.sidebar-icon {
+  color: white;
+  font-size: 1.5rem;
+  margin: 2rem auto;
+  text-align: center;
+}
 
+.main-content {
+  padding: 2.5rem;
+}
+.top-bar.align-items-center.mb-4 {
+  padding-left: 70px;
+}
+.search-bar {
+  width: 590px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    to bottom,
+    rgba(11, 148, 202, 0.5),
+    rgba(217, 37, 52, 0.5)
+  );
+  border-radius: 30px !important;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075);
+}
 
-  .greeting-card {
-    background: linear-gradient(400deg, #0B94CA, #2FDFFF, #0B2354);
-    color: white;
-    border: none;
-    position: relative;
-    border-radius: 66px !important; 
-    padding: 20px; 
-    display: flex;
-    flex-direction: column !important;
-    justify-content: space-between; 
-    gap: 20px; 
-    height: 100%; 
-}  
+.search-bar .search-input {
+  border-radius: 20px;
+  border: none;
+  padding: 0.5rem 2rem;
+}
+
+.user-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50% !important;
+}
+
+.text-black {
+  padding-bottom: 20px;
+  padding-top: 10px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.text-danger {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.greeting-text {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+  font-style: normal;
+}
+
+.greeting-stats {
+  padding: 20px;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 20px;
+  max-width: 500px;
+  height: 100px;
+}
+
+.greeting-stats h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+}
+
+.greeting-card {
+  background: linear-gradient(
+    45deg,
+    rgb(11, 148, 202) 0%,
+    /* #0B94CA */ rgb(36, 201, 239) 27%,
+    /* #24C9EF */ rgb(47, 223, 255) 39%,
+    /* #2FDFFF */ rgb(11, 35, 84) 100% /* #0B2354 */
+  );
+  color: white;
+  border: none;
+  position: relative;
+  border-radius: 66px !important;
+  padding: 60px;
+  display: flex;
+  flex-direction: column !important;
+  justify-content: space-between;
+  gap: 20px;
+  height: 350px !important;
+  margin: 0 auto;
+}
+
+.calendar-section {
+  padding-top: 20px;
+  padding-bottom: 20px !important;
+}
 
 @media screen and (min-width: 920px) {
   .greeting-card {
@@ -72,165 +130,159 @@
   }
 }
 
-  .greeting-header {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; 
-  }
+.greeting-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-  .stats-box {
-    display: flex;
-    gap: 15px; 
-    flex-wrap: wrap;
-    width: 100%; 
-    justify-content: flex-start; 
-  }
+.stats-box {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: flex-start;
+}
 
-  .stats-card {
-    background: #ffffff;
-    color: #0B94CA;
-    text-align: center;
-    opacity: 85%;
-    text-align: center;
+.stats-card {
+  background: #ffffff;
+  color: #0b94ca;
+  text-align: center;
+  opacity: 85%;
+  text-align: center;
   padding: 15px;
-  border-radius: 10px; 
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
-  flex: 1; 
-  }
-  
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 1;
+}
 
 .circle-icon {
-  width: 50px; 
+  width: 50px;
   height: 50px;
-  border-radius: 50%; 
+  border-radius: 50%;
   display: inline-flex;
-  align-items: center; 
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
   color: white;
   font-weight: bold;
   border: 3px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.1); 
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.1);
 }
 
-.time-container  {
+.time-container {
   border-radius: 10px;
   padding: 5px 5px;
   width: 67px !important;
   text-align: center;
 }
 
-
 .circle-icon.bg-danger {
-  background-color: #E81A2B !important; 
+  background-color: #e81a2b !important;
 }
 
 .circle-icon.bg-primary {
-  background-color: #FF4467 !important; 
+  background-color: #ff4467 !important;
 }
 
 .circle-icon.bg-info {
-  background-color: #0B94CA !important; 
+  background-color: #0b94ca !important;
 }
 
 .circle-icon.bg-success {
-  background-color: #2FDFFF !important; 
+  background-color: #2fdfff !important;
 }
 
 .bg-light-danger {
-  background-color: #f9d4d8 !important;  
+  background-color: #f9d4d8 !important;
 }
 
 .bg-light-primary {
-  background-color: #ffd2da !important;  
+  background-color: #ffd2da !important;
 }
 
 .bg-light-info {
-  background-color: #c9eaf6 !important; 
+  background-color: #c9eaf6 !important;
 }
 
 .bg-light-success {
-  background-color: #d5f8ff !important; 
+  background-color: #d5f8ff !important;
 }
 
-
 .txt-danger {
- color: #E81A2B !important; 
+  color: #e81a2b !important;
 }
 
 .txt-primary {
- color: #FF4467 !important; 
+  color: #ff4467 !important;
 }
 
 .txt-info {
- color: #0B94CA !important; 
+  color: #0b94ca !important;
 }
 
 .txt-success {
- color: #2FDFFF !important; 
+  color: #2fdfff !important;
 }
 
 .time-badge.bg-dan {
   background-color: rgba(232, 26, 43, 0.1);
-  color: #E81A2B;
-  padding: 5px 12px; 
-  border-radius: 20px; 
-  font-size: 0.9rem; 
-  font-weight: bold; 
-  text-align: center; 
-  min-width: 70px; 
-  display: inline-block; 
+  color: #e81a2b;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
 }
 
 .time-badge.bg-prim {
   background-color: rgba(255, 68, 103, 0.1);
-  color: #FF4467;
-  padding: 5px 12px; 
-  border-radius: 20px; 
-  font-size: 0.9rem; 
-  font-weight: bold; 
-  text-align: center; 
-  min-width: 70px; 
-  display: inline-block; 
+  color: #ff4467;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
 }
 
 .time-badge.bg-inf {
   background-color: rgba(11, 148, 202, 0.1);
-  color: #0B94CA;
-  padding: 5px 12px; 
-  border-radius: 20px; 
-  font-size: 0.9rem; 
-  font-weight: bold; 
-  text-align: center; 
-  min-width: 70px; 
-  display: inline-block; 
+  color: #0b94ca;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
 }
 
 .time-badge.bg-succ {
   background-color: rgba(47, 223, 255, 0.1);
-  color: #2FDFFF;
-  padding: 5px 12px; 
-  border-radius: 20px; 
-  font-size: 0.9rem; 
-  font-weight: bold; 
-  text-align: center; 
-  min-width: 70px; 
-  display: inline-block; 
+  color: #2fdfff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  min-width: 70px;
+  display: inline-block;
 }
 
-  
-  .consultation-card {
-    background: #ffffff;
-    color: #0056b3;
-    border-radius: 15px;
-  }
-  
-  .upcoming-section .card-body {
-    background: #ffffff;
+.consultation-card {
+  background: #ffffff;
+  color: #0056b3;
+  border-radius: 15px;
+}
 
-  }
-  
+.upcoming-section .card-body {
+  background: #ffffff;
+}
 
-  .circle-icon {
+.circle-icon {
   width: 40px;
   height: 40px;
   display: flex;
