@@ -1,0 +1,44 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: db-service
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: railway
+      MYSQL_USER: root
+      MYSQL_PASSWORD: FxmfpSREfpuGCswSOXJJXfrPCpZosACr
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mynetwork  # Cambié 'bridge' por 'mynetwork', que es una red definida por el usuario
+
+  web:
+    build: .
+    container_name: user-service
+    depends_on:
+      - db
+    command: >
+      sh -c "
+      until nc -z -v -w30 db 3306;
+      do echo 'Waiting for MySQL...'; sleep 5; done;
+      python manage.py makemigrations; 
+      python manage.py migrate;
+      python manage.py runserver 0.0.0.0:8000
+      "
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: user_service.settings
+      DATABASE_URL: mysql://root:FxmfpSREfpuGCswSOXJJXfrPCpZosACr@autorack.proxy.rlwy.net:15375/railway
+    networks:
+      - mynetwork  # Cambié 'bridge' por 'mynetwork', que es una red definida por el usuario
+
+volumes:
+  mysql_data:
+
+networks:
+  mynetwork:  # Definí la red 'mynetwork' de usuario
+    driver: bridge

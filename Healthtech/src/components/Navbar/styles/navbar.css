@@ -1,0 +1,100 @@
+/* Navbar container styles */
+.navbar {
+  background-color: #f8f9fa; /* Light gray background */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Logo styles */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand img {
+  max-height: 120px;
+  height: 120px;
+  width: 120px;
+}
+
+.navbar-brand span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #2c3e50; /* Navy color for CareNet text */
+}
+
+/* Navbar links styles */
+.navbar-nav .nav-link {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50 !important;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #0b94ca !important;
+  text-decoration: underline;
+}
+
+.navbar-nav .nav-link.active {
+  color: #0b94ca !important;
+  text-decoration: underline;
+}
+
+/* Signup link styles */
+.text-primary.fw-bold {
+  color: #0b94ca !important;
+  font-weight: bold;
+}
+
+
+/* Login button styles */
+
+.btn-primary {
+  background: #0b94ca !important;
+  font-family: inherit;
+  padding: 4px 30px !important;
+  font-weight: 900;
+  font-size: 18px;
+  border: 3px solid #2c3e50 !important;
+  border-radius: 0.4em !important;
+  box-shadow: 0.1em 0.1em;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translate(-0.05em, -0.05em);
+  box-shadow: 0.15em 0.15em;
+}
+
+.btn-primary:active {
+  transform: translate(0.05em, 0.05em);
+  box-shadow: 0.05em 0.05em;
+}
+
+/* Center alignment for the nav links */
+.navbar-nav {
+  margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .d-flex {
+    justify-content: center;
+  }
+}
+
+.btn-login {
+  background-color: #e81a2b;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  color: #fff;
+}
