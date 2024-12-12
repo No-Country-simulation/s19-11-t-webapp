@@ -1,9 +1,6 @@
-
-import { Container, Row, Col, Button, Form, Card } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import "./style/homeScreen.css";
 import services from "./utils/servicesData";
-import MedicalRecordsButton from "../medicalRecords/MedicalRecordsButton";
-
 
 function HomeScreen() {
   return (
@@ -28,13 +25,6 @@ function HomeScreen() {
                 Compassionate Approach Make Us A Leader In The Healthcare
                 Industry.
               </p>
-              <div className="hero-buttons mt-4">
-                <Button variant="primary" className="btn-appointments me-3">
-                  Appointments
-                </Button>
-
-              
-              </div>
             </Col>
 
             {/* Right Side: Doctor Image and 24/7 Badge */}
@@ -52,53 +42,6 @@ function HomeScreen() {
                   </span>
                 </div>
               </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* Search Bar Section */}
-      <section className="search-bar-section py-4">
-        <Container>
-          <Row className="align-items-center bg-white shadow-sm rounded px-3 py-4">
-            <Col md={3}>
-              <Form.Group controlId="searchName">
-                <div className="InputContainer">
-                  <Form.Control
-                    type="text"
-                    placeholder="Name"
-                    className="input"
-                  />
-                </div>
-              </Form.Group>
-            </Col>
-            <Col md={3}>
-              <Form.Group controlId="searchSpeciality">
-                <div className="InputContainer">
-                  <Form.Control
-                    type="text"
-                    placeholder="Speciality"
-                    className="input"
-                    id="input"
-                  />
-                </div>
-              </Form.Group>
-            </Col>
-            <Col md={3} className="d-flex align-items-center">
-              <span className="me-2">Available</span>
-              <div className="toggle-button-cover">
-                <div id="button-3" className="button r">
-                  <input className="checkbox" type="checkbox" />
-                  <div className="knobs"></div>
-                  <div className="layer"></div>
-                </div>
-              </div>
-            </Col>
-
-            <Col md={3} className="text-end">
-              <Button variant="primary" className="search-button">
-                Search
-              </Button>
             </Col>
           </Row>
         </Container>
