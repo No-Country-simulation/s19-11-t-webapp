@@ -68,7 +68,7 @@ function PatientDashboard({ user }) {
 
   return (
     <div className="dashboard-container">
-      <Container fluid>
+      <Container fluid className="container-dashboard" style={{ maxWidth: "90%", padding: "0 1rem", margin: "0 auto" }}>
         <Row>
           {/* Sidebar */}
           <Col md={1} className="sidebar d-flex flex-column">
@@ -101,7 +101,14 @@ function PatientDashboard({ user }) {
               <Col className="text-end d-flex justify-content-end align-items-center">
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
-                  <img src={user?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  {user?.image ? (
+                    <img src={user?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
+                  ) : (
+                    <span className="circle-icon bg-primary">
+                      {user.first_name[0]}
+                      {user.last_name[0]}
+                    </span>
+                  )}
                   <span className="ms-2">{user ? user.first_name : "Guest"}</span>
                 </div>
               </Col>
@@ -114,7 +121,7 @@ function PatientDashboard({ user }) {
 
             {/* Greeting Section */}
             <Row className="greeting-section">
-              <Col md={8}>
+              <Col md={9}>
                 <Card className="greeting-card d-flex flex-row">
                   <Card.Body className="d-flex align-items-center flex-column">
                     <div className="greeting-text">
@@ -137,7 +144,7 @@ function PatientDashboard({ user }) {
                                   onClick={async () => {
                                     const wasCanceled = await cancelAppointment(proximasCitas[0].id_cita);
                                     if (wasCanceled) {
-                                      const updatedCitas = await getAppointments(user.id, "pendiente", "fecha,hora_inicio", "asc");
+                                      const updatedCitas = await getAppointments(user.id, "agendada", "fecha,hora_inicio", "asc");
                                       setProximasCitas(updatedCitas);
                                     }
                                   }}
@@ -176,10 +183,12 @@ function PatientDashboard({ user }) {
                                     </p>
                                   </div>
                                 </div>
-                                <span className="small">{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
-                                <span className={`time-container ms-auto schedule-time txt-info bg-light-info`}>
-                                  {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
-                                </span>
+                                <div className="d-flex gap-3">
+                                  <span className="small">{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                  <span className={`time-container ms-auto schedule-time txt-info bg-light-info`}>
+                                    {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
+                                  </span>
+                                </div>
                               </ListGroup.Item>
                             ))
                           ) : (
@@ -202,10 +211,12 @@ function PatientDashboard({ user }) {
                                     </p>
                                   </div>
                                 </div>
-                                <span className="small">{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
-                                <span className={`time-container ms-auto schedule-time txt-primary bg-light-primary`}>
-                                  {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
-                                </span>
+                                <div className="d-flex gap-3">
+                                  <span className="small">{dayjs(cita.fecha).format("MMMM D, YYYY")}</span>
+                                  <span className={`time-container ms-auto schedule-time txt-primary bg-light-primary`}>
+                                    {dayjs(`2024-01-01T${cita.hora_inicio}`, "HH:mm:ss").format("h:mm A")}
+                                  </span>
+                                </div>
                               </ListGroup.Item>
                             ))
                           ) : (
@@ -217,21 +228,17 @@ function PatientDashboard({ user }) {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={4}>
+              <Col md={3}>
                 <Card className="help-section h-100">
                   <Card.Body>
                     <h5>How we can help you?</h5>
-                    <Button
-                      variant="primary"
-                      className="mb-3 w-100"
-                      onClick={() => setShowCrearCita(true)}
-                    >
+                    <Button variant="primary" className="mb-3 w-100" onClick={() => setShowCrearCita(true)}>
                       Book new appointment
                     </Button>
                     <Button variant="primary" className="mb-3 w-100">
                       Support
                     </Button>
-                    <Button variant="primary" className="mb-3 w-100">
+                    <Button variant="primary" className="w-100">
                       FAQ
                     </Button>
                   </Card.Body>
