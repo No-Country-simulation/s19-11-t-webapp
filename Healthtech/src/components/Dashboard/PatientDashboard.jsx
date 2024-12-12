@@ -8,6 +8,8 @@ function PatientDashboard({ userInfo }) {
   const [ultimasCitas, setUltimasCitas] = useState([]);
   const [proximasCitas, setProximasCitas] = useState([]);
 
+  console.log("Dashboard paciente: ", userInfo)
+
   // Traer citas segun filtro
   const getAppointments = async (pacienteId, estado, sort, order, limit = 4) => {
     try {
@@ -102,13 +104,13 @@ function PatientDashboard({ userInfo }) {
                 <i className="bi bi-bell me-3"></i>
                 <div className="user-profile d-flex align-items-center">
                   <img src={userInfo?.image || "https://via.placeholder.com/40"} alt="User" className="rounded-circle" />
-                  <span className="ms-2">{userInfo ? userInfo.firstName : "none"}</span>
+                  <span className="ms-2">{userInfo ? userInfo.first_name : "none"}</span>
                 </div>
               </Col>
             </Row>
             <Row>
               <h3>
-                Good Morning <span className="text-danger">{userInfo ? userInfo.firstName + " " + userInfo.lastName : null}</span>
+                Good Morning <span className="text-danger">{userInfo ? userInfo.first_name + " " + userInfo.last_name : null}</span>
               </h3>
             </Row>
 
