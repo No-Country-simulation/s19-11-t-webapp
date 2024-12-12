@@ -4,10 +4,12 @@ import axios from "axios";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import CreateAppointment from "./CreateAppointment";
 
 function PatientDashboard({ user }) {
   const [ultimasCitas, setUltimasCitas] = useState([]);
   const [proximasCitas, setProximasCitas] = useState([]);
+  const [showCrearCita, setShowCrearCita] = useState(false);
 
   console.log("Patient Dashboard user:", user);
 
@@ -53,6 +55,11 @@ function PatientDashboard({ user }) {
       getAppointments(user.id, "pendiente", "fecha", "asc").then(setProximasCitas);
     }
   }, [user]);
+
+  if (showCrearCita) {
+    // Render CrearCita component when the state is true
+    return <CreateAppointment onClose={() => setShowCrearCita(false)} />;
+  }
 
   return (
     <div className="dashboard-container">
@@ -209,7 +216,11 @@ function PatientDashboard({ user }) {
                 <Card className="help-section h-100">
                   <Card.Body>
                     <h5>How we can help you?</h5>
-                    <Button variant="primary" className="mb-3 w-100">
+                    <Button
+                      variant="primary"
+                      className="mb-3 w-100"
+                      onClick={() => setShowCrearCita(true)}
+                    >
                       Book new appointment
                     </Button>
                     <Button variant="outline-primary" className="mb-3 w-100">
