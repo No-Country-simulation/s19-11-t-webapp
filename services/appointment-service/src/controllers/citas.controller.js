@@ -53,6 +53,13 @@ export const getCitas = async (req, res) => {
 // Crear una nueva cita
 export const addCita = async (req, res) => {
   const { id_medico, id_paciente, fecha, hora_inicio, hora_fin, tipo } = req.body;
+  console.log("citas recibe");
+  console.log("pacienteId", id_paciente);
+  console.log("medicoId", id_medico);
+  console.log("fecha", fecha);
+  console.log("hora_inicio", hora_inicio);
+  console.log("hora_fin", hora_fin);
+  console.log("tipo", tipo);
 
   try {
     // Validar campos requeridos
@@ -197,6 +204,7 @@ const getHorarioValido = async (id_medico, fecha, hora_inicio, hora_fin) => {
   const dia = fechaIn.day();
   console.log("dia: ", dia);
   const horariosMedico = await horariosService.getHorarioByMedicoId(id_medico, dia);
+  console.log("horarios validos medico:", horariosMedico);
   const horarioValido = horariosMedico.some((item) => item.dia_semana == dia && item.hora_inicio <= hora_inicio && hora_fin <= item.hora_fin);
   return horarioValido;
 };

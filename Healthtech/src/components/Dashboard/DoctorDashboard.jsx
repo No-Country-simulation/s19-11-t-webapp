@@ -33,6 +33,7 @@ function DoctorDashboard({ user }) {
       };
 
       const response = await axios.get(apiUrl, { params });
+      console.log("citas obtenidas:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching appointments:", error);
@@ -46,7 +47,7 @@ function DoctorDashboard({ user }) {
         const doctorsData = await fetchDoctors();
         setDoctors(doctorsData);
 
-        const citasData = await getAppointments(user.id, "agendada", "fecha,hora_inicio", "asc");
+        const citasData = await getAppointments(user.user_id, "agendada", "fecha,hora_inicio", "asc");
         setCitas(citasData);
       } catch (error) {
         console.error("Error loading data:", error);
